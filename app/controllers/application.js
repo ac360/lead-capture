@@ -7,11 +7,11 @@ var mongoose = require('mongoose'),
 /**
  * Instantiate Servant SDK depending on development environment
  */
-if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
-    var Servant = require('servant-sdk-node')(process.env.SERVANT_CLIENT_ID, process.env.SERVANT_SECRET_KEY, 'Enter Your Production Callback URL Here', 0);
-} else {
-    var Servant = require('servant-sdk-node')(config.servant.client_id, config.servant.client_secret, 'http', 0);
-}
+// if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
+//     var Servant = require('servant-sdk-node')(process.env.SERVANT_CLIENT_ID, process.env.SERVANT_SECRET_KEY, 'Enter Your Production Callback URL Here', 0);
+// } else {
+//     var Servant = require('servant-sdk-node')(config.servant.client_id, config.servant.client_secret, 'http', 0);
+// }
 
 /**
  * Render Either Home Page or Dashboard Page If User is Logged In
@@ -50,46 +50,46 @@ var logout = function(req, res) {
  * Handle Servant Authentication Callback
  */
 var authenticationCallback = function(req, res) {
-    if (req.query.code) {
-        // If AuthorizationCode was included in the parameters, Get Access Token via Servant-SDK
-        Servant.exchangeAuthCode(req.query.code, function(error, tokens) {
-            if (error) console.log(error);
-            console.log("FETCHED ACCESS TOKEN: ", error, tokens);
-            // Try Rereshing AccessToekn
-            Servant.refreshAccessToken(tokens.refresh_token, function(error, tokens) {
-                console.log("REFRESHED ACCESS TOKEN: ", error, tokens);
-            });
+    // if (req.query.code) {
+    //     // If AuthorizationCode was included in the parameters, Get Access Token via Servant-SDK
+    //     Servant.exchangeAuthCode(req.query.code, function(error, tokens) {
+    //         if (error) console.log(error);
+    //         console.log("FETCHED ACCESS TOKEN: ", error, tokens);
+    //         // Try Rereshing AccessToekn
+    //         Servant.refreshAccessToken(tokens.refresh_token, function(error, tokens) {
+    //             console.log("REFRESHED ACCESS TOKEN: ", error, tokens);
+    //         });
 
 
-            // Save User Data & API Tokens To Session (SSL Certificate Is Recommended For Production + Set Session Secure to 'true' in Server.js)
-            req.session.servant = {
-                user_id: tokens.user_id,
-                access_token: tokens.access_token,
-                access_token_limited: tokens.access_token_limited
-            };
-            res.redirect('/');
-        }); // Servant Authentication Callback
-    } else if (req.query.refresh_token) {
-        // If RefreshToken was included in the parameters, the User has already authenticated
-        // Save User Data & API Tokens To Session (SSL Certificate Is Recommended For Production + Set Session Secure to 'true' in Server.js)
-        req.session.servant = {
-            user_id: req.query.user_id,
-            access_token: req.query.access_token,
-            access_token_limited: req.query.access_token_limited
-        };
+    //         // Save User Data & API Tokens To Session (SSL Certificate Is Recommended For Production + Set Session Secure to 'true' in Server.js)
+    //         req.session.servant = {
+    //             user_id: tokens.user_id,
+    //             access_token: tokens.access_token,
+    //             access_token_limited: tokens.access_token_limited
+    //         };
+    //         res.redirect('/');
+    //     }); // Servant Authentication Callback
+    // } else if (req.query.refresh_token) {
+    //     // If RefreshToken was included in the parameters, the User has already authenticated
+    //     // Save User Data & API Tokens To Session (SSL Certificate Is Recommended For Production + Set Session Secure to 'true' in Server.js)
+    //     req.session.servant = {
+    //         user_id: req.query.user_id,
+    //         access_token: req.query.access_token,
+    //         access_token_limited: req.query.access_token_limited
+    //     };
 
 
-        // Expiriments
-        Servant.getUserAndServants(req.query.access_token, function(error, records) {
-            console.log(error, records);
-            res.redirect('/');
-        });
+    //     // Expiriments
+    //     Servant.getUserAndServants(req.query.access_token, function(error, records) {
+    //         console.log(error, records);
+    //         res.redirect('/');
+    //     });
 
 
 
-    } else {
-        console.log("Something went wrong with authorization");
-    }
+    // } else {
+    //     console.log("Something went wrong with authorization");
+    // }
 
 
 
