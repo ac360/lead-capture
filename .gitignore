@@ -2,6 +2,6 @@
 .nodemonignore
 .sass-cache/
 node_modules/
-public/lib
+public/libs
 public/dist
 npm-debug.log
