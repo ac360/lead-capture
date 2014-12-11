@@ -2,7 +2,6 @@
 var mongoose = require('mongoose'),
     Helpers = require('../helpers'),
     Lead = mongoose.model('Lead'),
-    request = require('request'),
     config = require('../../config/config');
 
 /**
