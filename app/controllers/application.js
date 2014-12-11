@@ -1,7 +1,6 @@
 // Module dependencies.
 var mongoose = require('mongoose'),
     // User = mongoose.model('User'),
-    request = require('request'),
     config = require('../../config/config');
 
 /**
