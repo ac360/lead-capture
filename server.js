@@ -47,8 +47,8 @@ app.use(cookieParser());
 
 // Express Cookie-Based Session
 app.use(session({
-	name: 'iekoocNAEMETALPRELIOBTNAVRES',
-	secret: 'NAEMETALPRELIOBTNAVRES',
+	name: 'leadcaptureapp',
+	secret: 'leadcaptureapp84736',
 	secureProxy: false, // Set to true if you have an SSL Certificate
 	cookie: {
 		secure: false, // Secure is Recommeneded, However it requires an HTTPS enabled website (SSL Certificate)
@@ -80,7 +80,7 @@ require('./app/routes')(app); // pass our application into our routes
 
 // start app ===============================================
 app.listen(port);
-console.log('****** Servant Boilerplate is now running on port ' + port + ' ******'); // shoutout to the user
+console.log('****** Lead Capture App is now running on port ' + port + ' ******'); // shoutout to the user
 exports = module.exports = app; // expose app
 
 // End

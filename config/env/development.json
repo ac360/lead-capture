@@ -1,9 +1,9 @@
 {
-    "db": "mongodb://localhost/servant-boilerplate-mean-dev",
+    "db": "mongodb://localhost/lead-capture-app",
     "app": {
-        "name": "Servant Boilerplate – MEAN Stack",
-        "description" : "Rapidly build Servant applications by starting with this boilerplate application",
-        "keywords": "servant, content, cloud, cms, data, blog, products, events",
+        "name": "Lead Capture Application",
+        "description" : "Captures Leads And Pushes Them To Other Services",
+        "keywords": "lead, capture, email, marketing, email marketing",
         "port": 8080
     },
     "servant": {

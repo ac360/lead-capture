@@ -7,9 +7,9 @@ block content
 				h1.logo.st-font #{name}
 				p.tagline.st-font 
 					i.fa.fa-chevron-right 
-					span A boilerplate framework to help you rapidly build your own Servant application!
+					span #{description}
 					i.fa.fa-chevron-left
-		.row
+		.row.hidden
 			.col-md-12.animated.bounceInUp(id="info-container")
 				a.btn-primary.btn-lg.connect-btn(href="#{connect_url}", data-ng-click="connect()", data-ng-hide="connecting") Connect Servant
 				a.btn-primary.btn-lg.connect-btn(href="#{connect_url}", data-ng-show="connecting") 
