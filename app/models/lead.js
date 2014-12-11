@@ -51,6 +51,10 @@ var LeadSchema = new Schema({
         type: String,
         trim: true
     },
+    test: {
+        type: Boolean,
+        default: false
+    },
     updated: {
         type: Date
     },
