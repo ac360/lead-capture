@@ -1,5 +1,5 @@
 {
-	"db": "mongodb://localhost/servant-boilerplate-mean-dev",
+	"db": "mongodb://heroku_app32431475:te8qttifdv1mu3gu5ejmh1k1m5@ds061370.mongolab.com:61370/heroku_app32431475",
 	"app": {
         "name": "Lead Capture Application",
         "description" : "Captures Leads And Pushes Them To Other Services",
