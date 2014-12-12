@@ -24,7 +24,7 @@
     "tiny-lr": "0.0.9"
   },
   "devDependencies": {
-    "gulp": "^3.8.0",
+    "gulp": "^3.8.10",
     "gulp-concat": "^2.2.0",
     "gulp-csslint": "^0.1.4",
     "gulp-gzip": "0.0.8",
