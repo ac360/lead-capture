@@ -56,7 +56,7 @@ var captureForm = function(req, res) {
 
         // Lead Exists?
         if (leads[0]) return res.status(400).json({
-            error: 'You are already on our list'
+            error: 'You are already on the list'
         });
 
         /**
@@ -77,18 +77,6 @@ var captureForm = function(req, res) {
             });
         });
 
-
-
-        // Save Session Logic – May Be Useful Later
-        // saveUser(servantUser, appUser, tokens, function(savedUser) {
-        //     // Save to session
-        //     req.session.servant = {
-        //         user_id: savedUser.servant_user_id,
-        //         user: savedUser,
-        //         access_token: tokens.access_token
-        //     };
-        //     return res.redirect('/');
-        // }); // saveUser()
     }); // User.findOne
 
 }; // capture

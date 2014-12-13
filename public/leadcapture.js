@@ -100,8 +100,21 @@
 
         self._callAPI('POST', self._url + 'capture/form', formData, function(response) {
             console.log(response);
+            var successElement = document.getElementById('lead-capture-success');
+            console.log(successElement);
+            successElement.innerHTML = response.success;
+            successElement.style.display = 'block';
+            setTimeout(function() {
+                successElement.style.display = 'none';
+            },5000);
         }, function(error) {
-            console.log(error)
+            console.log(error);
+            var errorElement = document.getElementById('lead-capture-error');
+            errorElement.innerHTML = error.error;
+            errorElement.style.display = 'block';
+            setTimeout(function() {
+                errorElement.style.display = 'none';
+            },5000);
         });
 
         // Prevent Form Submitting
@@ -123,4 +136,10 @@
 
 
     
+
+
+
+
+
+
 
