@@ -1,39 +1,29 @@
 // Module dependencies.
 var mongoose = require('mongoose'),
-    // User = mongoose.model('User'),
     config = require('../../config/config');
 
-/**
- * Instantiate Servant SDK depending on development environment
- */
-// if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
-//     var Servant = require('servant-sdk-node')(process.env.SERVANT_CLIENT_ID, process.env.SERVANT_SECRET_KEY, 'Enter Your Production Callback URL Here', 0);
-// } else {
-//     var Servant = require('servant-sdk-node')(config.servant.client_id, config.servant.client_secret, 'http', 0);
-// }
+
+// Variables to pass into the views using Jade templates
+var variables = {
+    connect_url: config.servant.connect_url,
+    name: config.app.name,
+    description: config.app.description,
+    keywords: config.app.keywords,
+    environment: process.env.NODE_ENV
+};
 
 /**
  * Render Either Home Page or Dashboard Page If User is Logged In
  */
 
 var index = function(req, res) {
-    // Variables to pass into the views using Jade templates
-    var variables = {
-        connect_url: config.servant.connect_url,
-        name: config.app.name,
-        description: config.app.description,
-        keywords: config.app.keywords,
-        environment: process.env.NODE_ENV
-    };
     variables.access_token = req.session.servant !== undefined ? req.session.servant.access_token : undefined;
-
-    if (req.session.servant && req.session.servant.user_id) {
+    if (req.session.user) {
         res.render('dashboard', variables);
     } else {
         res.render('home', variables);
     }
 };
-
 
 /**
  * Log Out User & Redirect
@@ -44,6 +34,17 @@ var logout = function(req, res) {
     res.redirect('/');
 };
 
+/**
+ * LogIn
+ */
+var login = function(req, res) {
+     if (req.body.password === 'temppassword') {
+        req.session.user = { user: 'admin' };
+        return res.redirect('/');
+     } else {
+        res.status(401).json({ error: 'Unauthorized'});
+     }
+};
 
 /**
  * Handle Servant Authentication Callback
@@ -148,18 +149,9 @@ var authenticationCallback = function(req, res) {
 
 
 
-/**
- * Refresh AccessToken - Example/Helper function showing how to refresh AccessToken
- */
-
-// Servant.refreshAccessToken(req.user.servant_refresh_token, function(error, tokens) {
-//  console.log(errors, tokens)
-// });
-
-
-
 module.exports = {
     index: index,
+    login: login,
     logout: logout,
     authenticationCallback: authenticationCallback
 };

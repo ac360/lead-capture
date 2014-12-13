@@ -4,18 +4,33 @@ var mongoose = require('mongoose'),
     Lead = mongoose.model('Lead'),
     config = require('../../config/config');
 
+
+
 /**
- * Capture Route
+ * Initialize
+ * 
+ * Send settings and data to the requested domain
+ * 
+ */
+var initialize = function(req, res) {
+    res.json({ data: 'success' });
+}
+
+
+/**
+ * Capture
  *
  * Accepts a request body JSON object that contains data about the lead.
  *
  */
-var capture = function(req, res) {
+var captureForm = function(req, res) {
 
     /**
      * Validate Lead Data
      */
     req.body.domain = req.params.domain;
+
+    console.log(req.body)
     // Check Lead Data Has Required Properties
     if (!req.body.email) {
         return res.status(400).json({
@@ -76,13 +91,13 @@ var capture = function(req, res) {
         // }); // saveUser()
     }); // User.findOne
 
-}; // authenticationCallback
-
+}; // capture
 
 
 
 module.exports = {
-    capture: capture
+    initialize: initialize,
+    captureForm: captureForm
 };
 
 // End

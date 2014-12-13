@@ -1,7 +1,7 @@
 /**
  * Create Angular App
  */
-angular.module('appDashboard', ['ngResource', 'ui.router', 'ui.bootstrap', 'LocalStorageModule']);
+angular.module('appDashboard', ['ngResource', 'ui.router', 'ui.bootstrap']);
 
 
 /**
