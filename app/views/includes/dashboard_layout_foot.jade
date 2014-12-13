@@ -4,17 +4,19 @@ script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angul
 script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular-resource.min.js')
 script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js')
 script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.11/angular-ui-router.min.js')
-//- Lead Capture Script
-script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="musiconline", data-development="true", data-dashboard='true')
-	
+
 //-  If Site is in Production, use minfied assets
 if (process.env.NODE_ENV === 'production')
+	//- Lead Capture Script
+	script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="musiconline" data-dashboard='true')
 	//- Home App
 	script(type='text/javascript', src='/dist/dashboard.min.js')
 
 //-  If Site is not in Production, use raw assets, which make it easier for debugging
 if (process.env.NODE_ENV !== 'production')
-
+	//- Lead Capture Script
+	script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="musiconline", data-development="true", data-dashboard='true')
+		
 	//- Application Init File
 	script(type='text/javascript', src='/js/dashboard/init.js')
 
