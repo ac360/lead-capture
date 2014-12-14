@@ -12,10 +12,22 @@ block content
 		.row
 			.col-md-12
 				hr(style="width:50%;margin:25px auto;border-top:1px solid rgba(0,0,0,0.04)")
-				p.st-centered.st-font Sign In
-				form(action="login", method="POST", style="max-width:300px;margin:0px auto;")
+				p.st-centered.st-font Sign Up
+				form(action="signup", method="POST", style="max-width:300px;margin:0px auto;")
 					div.form-group
-						input.form-control.st-centered(type="password", name="password")
+						input.form-control.st-centered(type="email", name="email", placeholder="Email")
+					div.form-group
+						input.form-control.st-centered(type="password", name="password", placeholder="Password")
 					div.form-group.st-centered
 						input.btn.btn-primary.btn-lg(type="submit")
+				hr
+				p.st-centered.st-font Sign In
+				form(action="signin", method="POST", style="max-width:300px;margin:0px auto;")
+					div.form-group
+						input.form-control.st-centered(type="email", name="email", placeholder="Email")
+					div.form-group
+						input.form-control.st-centered(type="password", name="password", placeholder="Password")
+					div.form-group.st-centered
+						input.btn.btn-primary.btn-lg(type="submit")
+
 

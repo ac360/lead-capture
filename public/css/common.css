@@ -17,8 +17,9 @@ a:hover {text-decoration:none;color:#e96c6c;cursor:pointer;}
 .st-link:hover {color:#e96c6c!important;cursor:pointer;}
 .btn-primary, .btn-primary:visited {background:#e8544c!important;border:none!important;color:#ffffff;font-family: 'trend_sans_oneregular';text-transform: uppercase!important;letter-spacing:-1px;-webkit-font-smoothing: antialiased;-webkit-box-shadow: 0px 3px 0px 0px #c4443d;box-shadow: 0px 3px 0px 0px #c4443d;-webkit-border-radius:3px;border-radius:3px;text-shadow:none;-webkit-transition: all 0.3s ease-out;  /* Saf3.2+, Chrome */ -moz-transition: all 0.3s ease-out;  /* FF4+ */ -ms-transition: all 0.3s ease-out;  /* IE10 */ -o-transition: all 0.3s ease-out;  /* Opera 10.5+ */ transition: all 0.3s ease-out;}
 .btn-primary:hover {background:#ff6d65!important;color:#ffffff}
-input, textarea, select, a { 
+input, textarea, select, a, .s-contenteditable { 
     outline: none!important; /* overrides chrome default focus outline */
+    outline-color: none!important;
 }
 
 /* Custom Styles */
@@ -26,8 +27,8 @@ html, body { height:100%;font-family: "Helvetica Neue",Helvetica,Arial,sans-seri
 [ng\:cloak], [ng-cloak], .ng-cloak { display: none !important; }
 .st-centered {text-align: center}
 .st-font {font-family: 'trend_sans_oneregular';text-transform: uppercase!important;letter-spacing:-1px;}
-.st-sign-outer {background:#ffffff;padding:2px;margin:10px auto;height:auto;-webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);border-top:1px solid rgba(0,0,0,0.2);border-right:1px solid rgba(0,0,0,0.2);border-left:1px solid rgba(0,0,0,0.2);}
-.st-sign-inner {min-height:10px;padding:10px;font-size:12px;border:1px dashed rgba(0,0,0,0.15);text-align: center;}
+#form-outer, .st-sign-outer {background:#ffffff;padding:2px;margin:10px auto;height:auto;-webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);border-top:1px solid rgba(0,0,0,0.2);border-right:1px solid rgba(0,0,0,0.2);border-left:1px solid rgba(0,0,0,0.2);}
+#form-inner, .st-sign-inner {min-height:10px;padding:10px;font-size:12px;border:1px dashed rgba(0,0,0,0.15);text-align: center;}
 
 /* Home Page */
 #logo-container {padding-top:50px;text-align: center;}
@@ -39,16 +40,22 @@ html, body { height:100%;font-family: "Helvetica Neue",Helvetica,Arial,sans-seri
 
 
 /* Dashboard */
+#dashboard-header, #dashboard-navigation, #dashboard-content {display:block;min-height:15px;width:800px;margin:0px auto!important;}
 #dashboard-page {height:100%;}
 #dashboard-header .logo {letter-spacing: -1px;margin-top:5px;font-size:18px;}
 #dashboard-navigation {padding:0px;}
 #dashboard-navigation ul {margin-bottom:0px;}
 #dashboard-navigation a {text-align: right!important;font-size:11px;}
-#dashboard-content {height:500px;background:#f4f4f4;overflow:hidden!important;-webkit-border-radius:6px;border-radius:6px;border: 1px solid rgba(0,0,0,0.2);-webkit-box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);}
-#welcome-notice {min-width:150px;max-width:500px;margin:0px auto;margin-top:30px;}
-#welcome-notice h5 {margin:0px 0px 5px 0px;}
-#welcome-notice ul {margin-top:10px;}
-#welcome-notice ul>li {font-weight: 500;padding:3px;}
-#welcome-notice ul>li>img {width:15px;vertical-align: baseline;margin-right:5px;}
+#dashboard-content {min-height:500px;background:#f4f4f4;overflow:hidden!important;-webkit-border-radius:6px;border-radius:6px;border: 1px solid rgba(0,0,0,0.2);-webkit-box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);}
+#form-select {display:block;width:20%;float:left;height:100%;padding:10px;}
+#form-select .domain-option {text-align: center}
+#form-builder {display:block;width:60%;float:left;height:100%;padding:25px;}
+#form-events {display:block;width:20%;float:left;height:100%;padding:10px;}
+
+/* Form Styles */
+
+.cta2 {margin-bottom:20px;}
+.editable-form-block {padding:8px;margin:0px;}
+.editable-form-block-options {display:block;height:20px;width:100%;text-align: right;}
 
 

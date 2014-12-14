@@ -2,17 +2,19 @@ module.exports = function(app) {
 
 	// Defaults
 	var cors = require('cors');
+	var application = require('../app/controllers/application');
+	var api = require('../app/controllers/api');
+
+	// API Routes – TODO: Create Middleware that checks domain and authorizes it
+	app.get('/api/1/:domain', cors(), api.initializeDomain);
+	app.post('/api/1/:domain/capture/form', cors(), api.captureForm);
 
 	// Application Routes
-	var application = require('../app/controllers/application');
-	var leads = require('../app/controllers/leads');
-
-	// Lead Capture API Route – TODO: Create Middleware that checks domain and authorizes it
-	app.get('/api/1/:domain/initialize', cors(), leads.initialize);
-	app.post('/api/1/:domain/capture/form', cors(), leads.captureForm);
-
-	// Other Routes
-	app.post('/login', application.login);
+	app.get('/domains', application.checkSession, application.listDomains);
+	app.post('/domains', application.checkSession, application.createDomain);
+	app.put('/domains', application.checkSession, application.saveDomain);
+	app.post('/signup', application.signup);
+	app.post('/signin', application.signin);
 	app.get('/logout', application.logout);
 	app.get('/', application.index);
 

@@ -2,6 +2,7 @@
 var mongoose = require('mongoose'),
     Helpers = require('../helpers'),
     Lead = mongoose.model('Lead'),
+    Domain = mongoose.model('Domain'),
     config = require('../../config/config');
 
 
@@ -12,7 +13,7 @@ var mongoose = require('mongoose'),
  * Send settings and data to the requested domain
  * 
  */
-var initialize = function(req, res) {
+var initializeDomain = function(req, res) {
     res.json({ data: 'success' });
 }
 
@@ -84,7 +85,7 @@ var captureForm = function(req, res) {
 
 
 module.exports = {
-    initialize: initialize,
+    initializeDomain: initializeDomain,
     captureForm: captureForm
 };
 

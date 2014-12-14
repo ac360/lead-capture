@@ -7,6 +7,11 @@ var mongoose = require('mongoose'),
 
 // Lead Schema
 var LeadSchema = new Schema({
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
     email: {
         type: String,
         trim: true

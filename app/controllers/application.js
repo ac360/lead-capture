@@ -1,5 +1,8 @@
 // Module dependencies.
 var mongoose = require('mongoose'),
+    url = require('url'),
+    User = mongoose.model('User'),
+    Domain = mongoose.model('Domain'),
     config = require('../../config/config');
 
 
@@ -10,6 +13,11 @@ var variables = {
     description: config.app.description,
     keywords: config.app.keywords,
     environment: process.env.NODE_ENV
+};
+
+var checkSession = function(req, res, next) {
+    if (!req.session.user) return res.status(401).json({error: "Unauthorized"})
+    return next();
 };
 
 /**
@@ -35,125 +43,98 @@ var logout = function(req, res) {
 };
 
 /**
- * LogIn
+ * Sign Up
  */
-var login = function(req, res) {
-     if (req.body.password === 'temppassword') {
-        req.session.user = { user: 'admin' };
+var signup = function(req, res, next) {
+    // Check Required Params
+    if (!req.body.email || !req.body.password) return res.status(400).json({ error: 'Missing required fields' });
+    // Save User
+    var user = new User();
+    user.email = req.body.email;
+    user.password = req.body.password;
+    // Hash Password
+    user = user.hashUserPassword();
+    user.save(function(error, user) {
+        // Check for Conflict
+        if (error) {
+            if (error.code && error.code === 11000) {
+                if (error.err.indexOf('email') > -1) return res.status(409).json({ error: 'Email already registered' });
+            } else {
+                return res.status(500).json({ error: error });
+            }
+        }
+        // Save Session & Redirect
+        req.session.user = user;
         return res.redirect('/');
-     } else {
-        res.status(401).json({ error: 'Unauthorized'});
-     }
+    }); // user.save
+}; // signup
+
+
+/**
+ * Signin
+ */
+var signin = function(req, res, next) {
+    User.findOne({
+        email: req.body.email
+    }).exec(function(error, user) {
+        if (error) return res.status(500).json({ error: error });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        // Check Password
+        if (!user.authenticate(req.body.password)) res.status(401).json({ error: 'Unauthorized'});
+        // Save Session & Redirect
+        req.session.user = user;
+        return res.redirect('/');
+    });
 };
 
 /**
- * Handle Servant Authentication Callback
+ * List Domains
  */
-var authenticationCallback = function(req, res) {
-    // if (req.query.code) {
-    //     // If AuthorizationCode was included in the parameters, Get Access Token via Servant-SDK
-    //     Servant.exchangeAuthCode(req.query.code, function(error, tokens) {
-    //         if (error) console.log(error);
-    //         console.log("FETCHED ACCESS TOKEN: ", error, tokens);
-    //         // Try Rereshing AccessToekn
-    //         Servant.refreshAccessToken(tokens.refresh_token, function(error, tokens) {
-    //             console.log("REFRESHED ACCESS TOKEN: ", error, tokens);
-    //         });
 
+var listDomains = function(req, res, next) {
+    Domain.find({ user: req.session.user._id }).sort({ created: -1 }).exec(function(error, domains) {
+        if (error) return res.status(500).json({ error: error });
+        res.json(domains);
+    });
+};
 
-    //         // Save User Data & API Tokens To Session (SSL Certificate Is Recommended For Production + Set Session Secure to 'true' in Server.js)
-    //         req.session.servant = {
-    //             user_id: tokens.user_id,
-    //             access_token: tokens.access_token,
-    //             access_token_limited: tokens.access_token_limited
-    //         };
-    //         res.redirect('/');
-    //     }); // Servant Authentication Callback
-    // } else if (req.query.refresh_token) {
-    //     // If RefreshToken was included in the parameters, the User has already authenticated
-    //     // Save User Data & API Tokens To Session (SSL Certificate Is Recommended For Production + Set Session Secure to 'true' in Server.js)
-    //     req.session.servant = {
-    //         user_id: req.query.user_id,
-    //         access_token: req.query.access_token,
-    //         access_token_limited: req.query.access_token_limited
-    //     };
+/**
+ * Create Domain
+ */
 
+var createDomain = function(req, res, next) {
+    var domain = new Domain(req.body);
+    // Format URL
+    domain.domain = domain.domain.replace('http://', '').replace('http://', '').replace('www.', '');
+    if (domain.domain.indexOf('/') > -1) domain.domain = domain.domain.split('/')[0];
+    if (domain.domain.indexOf('?') > -1) domain.domain = domain.domain.split('?')[0];
+    // Add User
+    domain.user = req.session.user._id;
+    // Save
+    domain.save(function(error, response) {
+        if (error) return res.status(500).json({ error: error });
+        res.json(response);
+    });
+};
 
-    //     // Expiriments
-    //     Servant.getUserAndServants(req.query.access_token, function(error, records) {
-    //         console.log(error, records);
-    //         res.redirect('/');
-    //     });
+/**
+ * Save Domain
+ */
 
+var saveDomain = function(req, res, next) {
 
-
-    // } else {
-    //     console.log("Something went wrong with authorization");
-    // }
-
-
-
-    // // Fetch User's data from Servant & save user to your database
-    // Servant.getUser({
-    //  access_token: tokens.access_token
-    // }, function(error, servantUser) {
-
-    //  if (error) {
-    //      console.log(error);
-    //      return res.redirect('/');
-    //  }
-
-    //  // Search For User In Database
-    //  User.findOne({
-    //      servant_user_id: servantUser.user._id
-    //  }).exec(function(error, appUser) {
-
-    //      if (error) {
-    //          console.log(error);
-    //          return res.redirect('/');
-    //      }
-
-    //      // Function to save or update user
-    //      var saveUser = function(servantUser, appUser, tokens, callback) {
-    //          appUser.first_name = servantUser.user.first_name;
-    //          appUser.last_name = servantUser.user.last_name;
-    //          appUser.display_name = servantUser.user.display_name;
-    //          appUser.email = servantUser.user.email;
-    //          appUser.username = servantUser.user.username;
-    //          appUser.servant_user_id = servantUser.user._id;
-    //          appUser.servant_access_token = tokens.access_token;
-    //          appUser.servant_refresh_token = tokens.refresh_token;
-    //          appUser.save(function(error, savedUser) {
-    //              if (error) return console.log(error);
-    //              return callback(savedUser);
-    //          });
-    //      };
-
-    //      if (!appUser) appUser = new User();
-
-    //      // Function to save or update user
-    //      saveUser(servantUser, appUser, tokens, function(savedUser) {
-    //          // Save to session
-    //          req.session.servant = {
-    //              user_id: savedUser.servant_user_id,
-    //              user: savedUser,
-    //              access_token: tokens.access_token
-    //          };
-    //          return res.redirect('/');
-    //      }); // saveUser()
-
-    //  }); // User.findOne
-    // }); // Servant.getUser
-    // }); // Servant.exchangeAuthCode
-}; // authenticationCallback
-
+};
 
 
 module.exports = {
     index: index,
-    login: login,
+    checkSession: checkSession,
+    signup: signup,
+    signin: signin,
     logout: logout,
-    authenticationCallback: authenticationCallback
+    listDomains: listDomains,
+    createDomain: createDomain,
+    saveDomain: saveDomain
 };
 
 // End
