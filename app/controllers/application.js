@@ -93,7 +93,7 @@ var signin = function(req, res, next) {
  */
 
 var listDomains = function(req, res, next) {
-    Domain.find({ user: req.session.user._id }).sort({ domain: 1 }).exec(function(error, domains) {
+    Domain.find({ user: req.session.user._id }).sort({ created: -1 }).exec(function(error, domains) {
         if (error) return res.status(500).json({ error: error });
         res.json(domains);
     });
@@ -106,7 +106,7 @@ var listDomains = function(req, res, next) {
 var createDomain = function(req, res, next) {
     var domain = new Domain(req.body);
     // Format URL
-    domain.domain = domain.domain.replace('http://', '').replace('http://', '').replace('www.', '');
+    domain.domain = domain.domain.replace('http://', '').replace('http://', '').replace('www.', '').toLowerCase();
     if (domain.domain.indexOf('/') > -1) domain.domain = domain.domain.split('/')[0];
     if (domain.domain.indexOf('?') > -1) domain.domain = domain.domain.split('?')[0];
     // Add User

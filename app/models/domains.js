@@ -23,7 +23,8 @@ var DomainSchema = new Schema({
     },
     domain: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     forms: {
         type: Schema.Types.Mixed,
