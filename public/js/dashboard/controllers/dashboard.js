@@ -69,7 +69,10 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		$scope.createDomain = function() {
 			LeadCapture.createDomain({}, { domain: $scope.new_domain }, function(response) {
 				$scope.new_domain = '';
-				$scope.listDomains();
+				$scope.listDomains(function() {
+					// Add Form, If None
+					if (!$scope.domains[$scope.domain_index].forms[0]) $scope.domains[$scope.domain_index].forms[$scope.form_index] = angular.copy(defaultForm);
+				});
 			}, function(error) {
 				console.log(error);
 			});
