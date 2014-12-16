@@ -5,6 +5,16 @@ module.exports = function(app) {
 	var application = require('../app/controllers/application');
 	var api = require('../app/controllers/api');
 
+	// Redirect if not HTTPS
+	if (process.env.NODE_ENV && process.env.NODE_ENV === 'production') {
+		app.get('*',function(req,res,next){
+			if(req.headers['x-forwarded-proto']!=='https')
+			    res.redirect('https://lead-capture.herokuapp.com'+req.url)
+			else
+			    next() /* Continue to other routes if we're not redirecting */
+		});
+	}
+	
 	// API Routes – TODO: Create Middleware that checks domain and authorizes it
 	app.get('/api/1/:domain', cors(), api.initializeDomain);
 	app.post('/api/1/:domain/capture/form', cors(), api.captureForm);

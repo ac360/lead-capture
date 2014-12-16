@@ -1,6 +1,7 @@
 // Module dependencies.
 var mongoose = require('mongoose'),
     url = require('url'),
+    _ = require('lodash'),
     User = mongoose.model('User'),
     Domain = mongoose.model('Domain'),
     config = require('../../config/config');
@@ -122,7 +123,16 @@ var createDomain = function(req, res, next) {
  */
 
 var saveDomain = function(req, res, next) {
+    Domain.findOne({ _id: req.body._id, user: req.session.user._id }).exec(function(error, domain) {
+        if (error) return res.status(500).json({ error: error });
+        if (!domain) return res.status(404).json({ error: "Domain not found" });
 
+        domain = _.assign(domain, req.body);
+        domain.save(function(error, response) {
+            if (error) return res.status(500).json({ error: error });
+            res.json(response);
+        });
+    })
 };
 
 

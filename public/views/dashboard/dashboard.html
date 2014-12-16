@@ -1,19 +1,15 @@
 <div id="dashboard-page" class="animated fadeIn" data-ng-controller="DashboardController" data-ng-init="initialize()">
 
 	<!-- Dashboard Header -->
-	<div id="dashboard-header">
-		<h1 class="st-centered st-font logo animated fadeIn">
-			Lead Capture Dashboard
-		</h1>
-	</div>
 
 	<div class="clearfix"></div>
 
 	<!-- Dashboard Navigation -->
 	<div id="dashboard-navigation">
-		<ul class="list-inline pull-right">
+		<span style="font-size:16px;">Lead Capture Dashboard</span>
+		<ul class="list-inline pull-right" >
 			<li>
-				<a class="pull-right st-font" href="/logout">Sign Out</a>
+				<a class="pull-right" href="/logout" >Sign Out</a>
 			</li>
 		</ul>
 	</div>
@@ -26,66 +22,117 @@
 		<div id="form-select">
 			<p class="st-centered st-font" style="font-size:8px;margin-bottom:0px;margin-top:10px;">Domains</p>
 			<div class="domain-option">
-				<select class="form-control input-sm" data-ng-options="d.domain for d in domains" data-ng-model="domain"></select>
+				<select class="form-control input-sm"  data-ng-model="domain_index">
+					<option data-ng-repeat="domain in domains" value="{{ $index }}">{{ domain.domain }}</option>
+				</select>
 			</div>
 			<p class="st-centered st-font" style="font-size:8px;margin-bottom:0px;margin-top:10px;">Add Domain</p>
 			<div class="domain-option">
 				<input type="text" class="form-control input-sm st-centered clearfix" placeholder="mydomain.com" style="margin-bottom:10px;" data-ng-model="new_domain">
 				<button class="btn btn-primary btn-sm" style="font-size:10px;" data-ng-click="createDomain()">Add Domain</button>
 			</div>
+
 			<hr>
+
+			<p class="st-centered st-font" style="font-size:8px;margin-bottom:0px;margin-top:0px;">Forms</p>
 			<div id="form-list">
-				<p data-ng-repeat="form in domain.forms"> {{ form.title }}</p>
+				<p class="st-link" data-ng-repeat="form in domains[domain_index].forms track by $id($index)" style="font-size:12px;margin:8px 10px">
+					<i class="fa fa-file-text-o" style="margin-right:5px;"></i> {{ form.title }}
+				</p>
 			</div>
+
 		</div>
 		
 		<div id="form-builder" class="animated bounceInUp">
-			<p class="st-centered s-contenteditable" data-ng-model="form.title" contenteditable="true" style="padding:4px;">{{ form.title }}</p>
+
 			<div id="form-outer">
 				<div id="form-inner">
-					<h1 class="s-contenteditable cta1" data-ng-model="form.cta1" contenteditable="true">{{ form.cta1 }}</h1>
-					<h5 class="s-contenteditable cta2" data-ng-model="form.cta2" contenteditable="true">{{ form.cta2 }}</h5>
+
+					
+
+					<div class="form-top" style="display:block;width:100%;height:40px;">
+						<!-- Form Title Input -->
+						<div class="title" style="display:block;float:left;width:230px;height:40px;margin:0px;padding-top:3px;padding-right:5px;">
+							<input type="text" data-ng-model="domains[domain_index].forms[form_index].title" style="float:left;padding:3px;border:0px;background:none;width:100%;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Form Title">
+							
+						</div>
+						<div class="events" style="display:block;float:right;width:135px;height:30px;text-align:right">
+							<select class="form-control input-sm" data-ng-options="field for field in field_types" data-ng-model="field" style="float:left;text-transform: capitalize!important;width:100px;margin:0px 0px"></select>
+							<button class="btn btn-primary btn-xs st-centered" data-ng-click="addField()" style="height:26px;width:30px;padding-left:3px;">
+								<i class="fa fa-plus" data-ng-click="addOption($index)"></i>
+							</button>
+
+
+						</div>
+					</div>
+
+
+
+
+					<!-- Form CTA1 Input -->
+					<div class="cta1">
+						<input type="text" data-ng-model="domains[domain_index].forms[form_index].cta1" style="border:0px;background:none;width:100%;margin:10px auto 5px auto;text-align:center;font-size:22px;font-weight:500;color:rgba(0,0,0,0.8)">
+					</div>
+
+					<!-- Form CTA2 Input -->
+					<div class="cta2">
+						<textarea data-ng-model="domains[domain_index].forms[form_index].cta2" style="border:0px;background:none;width:100%;height:35px;margin:0px auto 5px auto;text-align:center;font-size:14px;font-weight:normal;color:rgba(0,0,0,0.8);resize:vertical;"></textarea>
+					</div>
+
 					<p id="lead-capture-error" style="text-align:center;padding:10px;display:none;"></p>
 					<p id="lead-capture-success" style="text-align:center;padding:10px;display:none;"></p>
 
 					<!-- Editable Form Block -->
-					<div class="editable-form-block" data-ng-repeat="block in form.blocks track by $id($index)">
+					<div class="editable-form-block" data-ng-repeat="block in domains[domain_index].forms[form_index].blocks track by $id($index)">
 						<p data-ng-if="block.type !== 'select'" class="st-centered" style="margin-bottom:4px;">
 							<span data-ng-show="block.type === 'full_name'">Full Name</span>
 							<span data-ng-show="block.type === 'email'">Email</span>
 						</p>
 
-						<p data-ng-if="block.type === 'select'" class="st-centered s-contenteditable" style="margin-bottom:4px;" data-ng-model="block.title" contenteditable="true">
-							{{ block.title }}
-						</p>
+						<div class="select-title" data-ng-show="block.type === 'select'">
+							<input type="text" data-ng-model="block.title" style="border:0px;background:none;width:100%;margin:0px auto;text-align:center;font-size:12px;">
+						</div>
 
 						<!-- Input Full Name -->
 						<input data-ng-if="block.type === 'full_name'" type="text" class="form-control st-centered" placeholder="John Richards">
 						<!-- Input Email -->
 						<input data-ng-if="block.type === 'email'" type="email" class="form-control st-centered" placeholder="john@gmail.com">
 						<!-- Input Select -->
-						<select data-ng-if="block.type === 'select'"  class="form-control input-sm" data-ng-options="option for option in block.options" data-ng-model="block.options"></select>
+						<select data-ng-show="block.type === 'select'"  class="form-control input-sm">
+							<option data-ng-repeat="option in block.options track by $id($index)">{{ option }}</option>
+						</select>
+						<div class="select-options" data-ng-show="block.type === 'select'">
+							<table class="table options-table" style="width:60%;margin:10px 0px;">
+								<tr>
+									<td>
+										<i class="st-red fa fa-plus st-link" data-ng-click="addOption($index)"></i>
+									</td>
+									<td >
+										<input type="text" data-ng-model="$parent.new_option" style="border:0px;background:none;width:100%;height:15px;margin:0px auto;text-align:left;font-size:12px;padding:0px;" placeholder="Enter New Option Here">
+									</td>
+								</tr>
+								<tr data-ng-repeat="option in block.options track by $id($index)">
+									<td>
+										<i class="st-red fa fa-close st-link" data-ng-click="block.options.splice($index, 1)"></i>
+									</td>
+									<td>
+										{{ option }}
+									</td>
+								</tr>
+							</table>
+						</div>
+
 
 						<div class="editable-form-block-options ">
-							<i class="st-red fa fa-chevron-up st-link" data-ng-click="moveSortable(block, $index, 'up')"></i>
-							<i class="st-red fa fa-chevron-down st-link" data-ng-click="moveSortable(block, $index, 'down')"></i>
-							<i class="st-red fa fa-close st-link" data-ng-click="removeSortable($index)"></i>
+							<i class="st-red fa fa-chevron-up st-link" data-ng-click="moveBlock(block, $index, 'up')"></i>
+							<i class="st-red fa fa-chevron-down st-link" data-ng-click="moveBlock(block, $index, 'down')"></i>
+							<i class="st-red fa fa-close st-link" data-ng-click="domains[domain_index].forms[form_index].blocks.splice($index, 1)"></i>
 						</div>
 					</div>
 					<div class="form-group" style="margin:25px 0px">
-						<button class="btn btn-primary" style="letter-spacing:-1px;">Save & Preview</button>
+						<button class="btn btn-primary btn-lg" style="letter-spacing:-1px;" data-ng-click="saveAndPreview()">Save & Preview</button>
 					</div>
 				</div>
-			</div>
-		</div>
-
-		<div id="form-events">
-			<p class="st-centered st-font" style="font-size:8px;margin-bottom:0px;margin-top:10px;">Add Form Field</p>
-			<div class="domain-option">
-				<select class="form-control input-sm" data-ng-options="field for field in field_types" data-ng-model="field" style="text-transform: capitalize!important"></select>
-				<p class="st-centered" style="margin:10px 0px;">
-					<button class="btn btn-primary btn-sm" style="font-size:10px;" data-ng-click="addField()">Add Field</button>
-				</p>
 			</div>
 		</div>
 

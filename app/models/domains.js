@@ -26,7 +26,7 @@ var DomainSchema = new Schema({
         required: true
     },
     forms: {
-        type: Array,
+        type: Schema.Types.Mixed,
         default: []
     }
 });

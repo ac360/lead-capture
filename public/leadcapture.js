@@ -56,13 +56,13 @@
         self._development = scriptElement.getAttribute('data-development');
         self._dashboard = scriptElement.getAttribute('data-dashboard');
         self._domain = scriptElement.getAttribute('data-domain');
-        self._url = self._development === 'true' ? 'http://localhost:8080/api/1/' + self._domain + '/' : 'https://lead-capture.herokuapp.com/api/1/' + self._domain + '/';
+        self._url = self._development === 'true' ? 'http://localhost:8080/api/1/' + self._domain : 'https://lead-capture.herokuapp.com/api/1/' + self._domain ;
 
         // Fetch Initialization Data
-        self._callAPI('GET', self._url + 'initialize', null, function(response) {
+        self._callAPI('GET', self._url , null, function(response) {
             
             self._data = response;
-            console.log(response);
+            console.log("leadcapture script initialized!");
             // Set Modal Timer
             
 

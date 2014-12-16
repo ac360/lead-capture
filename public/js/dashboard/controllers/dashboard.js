@@ -3,9 +3,8 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 
 		// Set Defaults
 		$scope.domains = [];
-		$scope.new_domain = '';
-		$scope.domain;
-		$scope.form;
+		$scope.new_domain;
+		$scope.new_option;
 		$scope.field_types = [
 			'email',
 			'full_name',
@@ -23,7 +22,7 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		$scope.fields.select = {
 			type:"select",
 			title: "Untitled Select Field",
-			options: []
+			options: ['Option one', 'Option two']
 		};
 		// Default Form
 		var defaultForm = {
@@ -34,17 +33,34 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		}
 
 		$scope.initialize = function() {
+			// Defaults
+			$scope.form_index = 0;
+			$scope.domain_index = 0;
 			// Get Domains
-			$scope.listDomains();
+			$scope.listDomains(function() {
+				// Add Form, If None
+				if (!$scope.domains[$scope.domain_index].forms[0]) $scope.domains[$scope.domain_index].forms[$scope.form_index] = angular.copy(defaultForm);
+			});
+
+			// Watch Domain
+			$scope.$watch('domain_index', function(newDomain, oldDomain) {
+			    if (newDomain !== oldDomain) {
+					$scope.form_index = 0;
+					// Add Form, If None
+					if (!$scope.domains[$scope.domain_index].forms[0]) $scope.domains[$scope.domain_index].forms[$scope.form_index] = angular.copy(defaultForm);
+			    }
+			});
 		};
+
+		/**
+		 * Domain Functions
+		 */
 
 		$scope.listDomains = function(callback) {
 			LeadCapture.listDomains(function(response) {
+				console.log("Domains Fetched: ", response);
 				$scope.domains = response;
-				console.log("Domains Fetched: ", $scope.domains);
-				$scope.domain = $scope.domains[0];
-				$scope.form = $scope.domain.forms[0];
-				if ($scope.form === undefined) $scope.form = defaultForm;
+				if (callback) callback();
 			}, function(error) {
 				console.log(error);
 			});
@@ -59,26 +75,39 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 			});
 		};
 
+		/**
+		 * Form Functions
+		 */
+
+		$scope.saveAndPreview = function() {
+			LeadCapture.saveDomain(null, $scope.domains[$scope.domain_index], function(response) {
+				$scope.domains[$scope.domain_index] = response;
+			}, function(error) {
+				console.log(error);
+			});
+		};
+
 		$scope.addField = function() {
-			$scope.form.blocks.push($scope.fields[$scope.field]);
+			$scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.push($scope.fields[$scope.field]);
 			$scope.field = 'email';
-			console.log("Field Added: ", $scope.form)
+			console.log("Field Added: ", $scope.domains[$scope.domain_index]);
 		};	
 
-		$scope.moveSortable = function(item, index, direction) {
+		$scope.addOption = function(block_index) {
+			console.log($scope.new_option)
+			$scope.domains[$scope.domain_index].forms[$scope.form_index].blocks[block_index].options.push($scope.new_option);
+			$scope.new_option = '';
+		};	
+
+		$scope.moveBlock = function(item, index, direction) {
             if (direction === 'up' && index > 0) {
-                $scope.form.blocks.splice(index, 1);
-                $scope.form.blocks.splice(index - 1, 0, item);
+                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index, 1);
+                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index - 1, 0, item);
             }
             if (direction === 'down' && index < $scope.form.blocks.length) {
-                $scope.form.blocks.splice(index, 1);
-                $scope.form.blocks.splice(index + 1, 0, item);
+                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index, 1);
+                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index + 1, 0, item);
             }
         }
-
-        $scope.removeSortable = function(index) {
-            $scope.form.blocks.splice(index, 1);
-        }
-
 	}
 ]);	
