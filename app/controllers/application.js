@@ -93,7 +93,7 @@ var signin = function(req, res, next) {
  */
 
 var listDomains = function(req, res, next) {
-    Domain.find({ user: req.session.user._id }).sort({ created: -1 }).exec(function(error, domains) {
+    Domain.find({ user: req.session.user._id }).sort({ domain: 1 }).exec(function(error, domains) {
         if (error) return res.status(500).json({ error: error });
         res.json(domains);
     });
