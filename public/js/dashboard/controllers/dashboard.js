@@ -24,12 +24,17 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 			title: "Untitled Select Field",
 			options: ['Option one', 'Option two']
 		};
+		// Events
+		$scope.events = [
+			{type: 'timer', time: 2000}
+		];
 		// Default Form
 		var defaultForm = {
 			title: 'Untitled Form',
 			cta1: 'Get Updates',
 			cta2: 'Sign up to receive updates about our service',
-			blocks: [$scope.fields.full_name, $scope.fields.email]
+			blocks: [$scope.fields.full_name, $scope.fields.email],
+			events: [{type: 'timer', time: 2000}]
 		}
 
 		$scope.initialize = function() {
@@ -82,10 +87,10 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		/**
 		 * Form Functions
 		 */
-
 		$scope.saveAndPreview = function() {
 			LeadCapture.saveDomain(null, $scope.domains[$scope.domain_index], function(response) {
 				$scope.domains[$scope.domain_index] = response;
+				window.location = '/preview/' + response.domain;
 			}, function(error) {
 				console.log(error);
 			});

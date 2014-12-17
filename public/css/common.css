@@ -61,7 +61,7 @@ html, body { height:100%;font-family: "Helvetica Neue",Helvetica,Arial,sans-seri
 #dashboard-navigation {padding:0px;margin:0px auto!important;}
 #dashboard-navigation ul {margin-bottom:0px;}
 #dashboard-navigation a {text-align: right!important;font-size:11px;}
-#dashboard-content {min-height:600px;margin:0px auto 100px auto!important;background:#f4f4f4;overflow:hidden!important;-webkit-border-radius:6px;border-radius:6px;border: 1px solid rgba(0,0,0,0.2);-webkit-box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);}
+#dashboard-content {min-height:500px;margin:0px auto 100px auto!important;background:#f4f4f4;overflow:hidden!important;-webkit-border-radius:6px;border-radius:6px;border: 1px solid rgba(0,0,0,0.2);-webkit-box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15), inset 0 1px 0 1px rgba(255,255,255,0.7);}
 #form-select {display:block;width:30%;float:left;height:100%;padding:10px;}
 #form-select .domain-option {text-align: center}
 #form-builder {display:block;width:70%;float:left;height:100%;padding:15px 25px 25px 25px;}
@@ -75,5 +75,10 @@ html, body { height:100%;font-family: "Helvetica Neue",Helvetica,Arial,sans-seri
 .editable-form-block-options {display:block;height:20px;width:100%;text-align: right;}
 .options-table {text-align:left!important;}
 .options-table td {border-top: none!important;border-bottom: 1px solid rgba(0,0,0,0.04)!important;}
+
+/* Preview Page */
+#preview-page {
+  height:200%;
+}
 
 

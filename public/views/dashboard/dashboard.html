@@ -56,13 +56,11 @@
 							<input type="text" data-ng-model="domains[domain_index].forms[form_index].title" style="float:left;padding:3px;border:0px;background:none;width:100%;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Form Title">
 							
 						</div>
-						<div class="events" style="display:block;float:right;width:135px;height:30px;text-align:right">
+						<div class="add-field" style="display:block;float:right;width:130px;height:30px;text-align:right">
 							<select class="form-control input-sm" data-ng-options="field for field in field_types" data-ng-model="field" style="float:left;text-transform: capitalize!important;width:100px;margin:0px 0px"></select>
-							<button class="btn btn-primary btn-xs st-centered" data-ng-click="addField()" style="height:26px;width:30px;padding-left:3px;">
-								<i class="fa fa-plus" data-ng-click="addOption($index)"></i>
-							</button>
-
-
+							<span class="st-link" style="font-size:23px;" data-ng-click="addField()">
+								<i class="fa fa-plus"></i>
+							</span>
 						</div>
 					</div>
 

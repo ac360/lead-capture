@@ -26,11 +26,19 @@ var checkSession = function(req, res, next) {
  */
 
 var index = function(req, res) {
-    variables.access_token = req.session.servant !== undefined ? req.session.servant.access_token : undefined;
     if (req.session.user) {
         res.render('dashboard', variables);
     } else {
         res.render('home', variables);
+    }
+};
+
+var preview = function(req, res) {
+    if (req.session.user) {
+        variables.domain = req.params.domain;
+        res.render('preview', variables);
+    } else{
+      res.render('home', variables);
     }
 };
 
@@ -138,6 +146,7 @@ var saveDomain = function(req, res, next) {
 
 module.exports = {
     index: index,
+    preview: preview,
     checkSession: checkSession,
     signup: signup,
     signin: signin,
