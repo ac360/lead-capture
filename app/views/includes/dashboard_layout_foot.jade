@@ -7,9 +7,7 @@ script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angul
 
 //-  If Site is in Production, use minfied assets
 if (process.env.NODE_ENV === 'production')
-	//- Lead Capture Script
-	script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="musiconline" data-dashboard='true')
-	//- Home App
+	//- App
 	script(type='text/javascript', src='/dist/dashboard.min.js')
 
 //-  If Site is not in Production, use raw assets, which make it easier for debugging
@@ -25,4 +23,7 @@ if (process.env.NODE_ENV !== 'production')
 
 	//- Application Controllers
 	script(type='text/javascript', src='/js/dashboard/controllers/dashboard.js')
+
+	//- Application Services
+	script(type='text/javascript', src='/js/dashboard/services/leadcapture_service.js')
 	
