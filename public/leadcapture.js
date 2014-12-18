@@ -56,7 +56,7 @@
         self._development = scriptElement.getAttribute('data-development');
         self._dashboard = scriptElement.getAttribute('data-dashboard');
         self._domain = scriptElement.getAttribute('data-domain');
-        self._url = self._development === 'true' ? 'http://localhost:8080/api/1/' + self._domain : 'https://lead-capture.herokuapp.com/api/1/' + self._domain ;
+        self._url = self._development === 'true' ? window.location.protocol + '://localhost:8080/api/1/' + self._domain : window.location.protocol + '://lead-capture.herokuapp.com/api/1/' + self._domain ;
         self._elements = {};
         self._listeners = {};
 
