@@ -142,9 +142,8 @@
         document.getElementById('lc-popup-actions').style.display = 'none';
 
         // Show Success
-        var successElement = document.getElementById('lc-success');
-        successElement.style.display = 'block';
-
+        document.getElementById('lc-success').style.display = 'block';
+        document.getElementById('lc-success-close').style.display = 'block';
 
         console.log("LeadCapture Popup Submitted: ", popupData);
 
@@ -197,7 +196,9 @@
         // Create Styles
         var popupHTML = '<style>';
         popupHTML = popupHTML + '#lc-popup { width:100%;max-width:600px;min-height:400px;margin:5% auto 0px auto;background:#ffffff;padding:25px;-webkit-border-radius: 6px;border-radius: 6px; }';
-        popupHTML = popupHTML + '#lc-success { text-align:center;font-size:16px;margin:40px 0px 10px 0px;}';
+        popupHTML = popupHTML + '#lc-success { text-align:center;font-size:16px;margin:55px 0px 10px 0px;}';
+        popupHTML = popupHTML + '#lc-success-close { text-align:center;font-size:16px;margin:0px 0px 50px 0px;text-decoration:underline;}';
+        popupHTML = popupHTML + '#lc-success-close:hover { cursor:pointer }';
         popupHTML = popupHTML + '#lc-cta1 { text-align:center}';
         popupHTML = popupHTML + '#lc-cta2 { text-align:center}';
         popupHTML = popupHTML + '#lc-popup-actions { display:block;width:100%;text-align:center;margin: 35px 0px; }';
@@ -248,6 +249,8 @@
         }
         // Create Success Message
         popupHTML = popupHTML + '<p id="lc-success" style="display:none;">You have been added to the list!</p>';
+        // Success Close Modal
+        popupHTML = popupHTML + '<p id="lc-success-close" style="display:none;">Close this pop-up</p>';
         // Add Buttons
         popupHTML = popupHTML + '<div id="lc-popup-actions">';
         popupHTML = popupHTML + '<p style="text-align:center;"><button id="lc-submit-btn">Submit</button></p>';
@@ -265,6 +268,10 @@
         });
         // Add Listener to Close Popup
         document.getElementById("lc-cancel-link").addEventListener("click", function(){
+            self.closePopup();
+        });
+        // Add Listener to Close Popup
+        document.getElementById("lc-success-close").addEventListener("click", function(){
             self.closePopup();
         });
     }
