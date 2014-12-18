@@ -4,10 +4,15 @@ block content
 	section.container-fluid(id="preview-page")
 		h4.st-centered Preview Page
 		p.st-centered
-			a.btn.btn-primary(href="/") Go Back
+			a.btn.btn-primary(href="/") 
+				i.fa.fa-chevron-left(style="margin-right:5px;")
+				|  Go Back
 
-		//- p.st-centered(style="margin-top:150px;")
-		//- 	button.btn.btn-primary.btn-lg(style="font-size:35px;") Click Here
+
+		p.st-centered(style="margin-top:150px;") This button's ID is "cta-btn"
+
+		p.st-centered
+			button.btn.btn-primary.btn-lg(id="cta-btn", style="font-size:35px;") Click Here
 
 	//- Lead Capture Script
 	script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="#{domain}", data-dashboard="true", data-development="true")

@@ -26,7 +26,7 @@ var DomainSchema = new Schema({
         required: true,
         unique: true
     },
-    forms: {
+    popups: {
         type: Schema.Types.Mixed,
         default: []
     }

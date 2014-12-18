@@ -22,6 +22,7 @@ module.exports = function(app) {
 	// Application Routes
 	app.get('/domains', application.checkSession, application.listDomains);
 	app.post('/domains', application.checkSession, application.createDomain);
+	app.delete('/domains/:domain', application.checkSession, application.destroyDomain);
 	app.put('/domains', application.checkSession, application.saveDomain);
 	app.post('/signup', application.signup);
 	app.post('/signin', application.signin);

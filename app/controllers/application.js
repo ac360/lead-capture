@@ -143,6 +143,21 @@ var saveDomain = function(req, res, next) {
     })
 };
 
+/**
+ * Destroy Domain
+ */
+
+var destroyDomain = function(req, res, next) {
+    Domain.findOne({ domain: req.params.domain, user: req.session.user._id }).exec(function(error, record) {
+        if (error) return res.status(500).json({ error: error });
+        if (!record) return res.status(404).json({ error: 'Domain not found' });
+        record.remove(function(error, response) {
+            if (error) return res.status(500).json({ error: error });
+            res.json({ _id: response._id, message: "Domain sucessfully deleted" });
+        });
+    });
+};
+
 
 module.exports = {
     index: index,
@@ -153,7 +168,8 @@ module.exports = {
     logout: logout,
     listDomains: listDomains,
     createDomain: createDomain,
-    saveDomain: saveDomain
+    saveDomain: saveDomain,
+    destroyDomain: destroyDomain
 };
 
 // End

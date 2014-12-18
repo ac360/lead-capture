@@ -4,7 +4,9 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		// Set Defaults
 		$scope.domains = [];
 		$scope.new_domain;
+		$scope.new_popup;
 		$scope.new_option;
+		$scope.new_event = 'timer';
 		$scope.field_types = [
 			'email',
 			'full_name',
@@ -24,13 +26,9 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 			title: "Untitled Select Field",
 			options: ['Option one', 'Option two']
 		};
-		// Events
-		$scope.events = [
-			{type: 'timer', time: 2000}
-		];
-		// Default Form
-		var defaultForm = {
-			title: 'Untitled Form',
+		// Default Popup
+		var defaultPopup = {
+			title: 'Untitled Pop-Up',
 			cta1: 'Get Updates',
 			cta2: 'Sign up to receive updates about our service',
 			blocks: [$scope.fields.full_name, $scope.fields.email],
@@ -39,21 +37,14 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 
 		$scope.initialize = function() {
 			// Defaults
-			$scope.form_index = 0;
+			$scope.popup_index = 0;
 			$scope.domain_index = 0;
 			// Get Domains
-			$scope.listDomains(function() {
-				// Add Form, If None
-				if (!$scope.domains[$scope.domain_index].forms[0]) $scope.domains[$scope.domain_index].forms[$scope.form_index] = angular.copy(defaultForm);
-			});
-
+			$scope.listDomains();
 			// Watch Domain
 			$scope.$watch('domain_index', function(newDomain, oldDomain) {
 			    if (newDomain !== oldDomain) {
-			    	console.log("Changed Domain")
-					$scope.form_index = 0;
-					// Add Form, If None
-					if (!$scope.domains[$scope.domain_index].forms[0]) $scope.domains[$scope.domain_index].forms[$scope.form_index] = angular.copy(defaultForm);
+					$scope.popup_index = 0;
 			    }
 			});
 		};
@@ -72,12 +63,24 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 			});
 		};
 
+		$scope.setDomain = function(index) {
+			$scope.domain_index = index;
+		};
+
 		$scope.createDomain = function() {
 			LeadCapture.createDomain({}, { domain: $scope.new_domain }, function(response) {
 				$scope.listDomains(function() {
 					$scope.new_domain = '';
-					// Add Form, If None
-					if (!$scope.domains[$scope.domain_index].forms[0]) $scope.domains[$scope.domain_index].forms[$scope.form_index] = angular.copy(defaultForm);
+				});
+			}, function(error) {
+				console.log(error);
+			});
+		};
+
+		$scope.destroyDomain = function(domain, index) {
+			LeadCapture.destroyDomain({ domain: domain.domain }, function(response) {
+				$scope.listDomains(function() {
+					$scope.domain_index = 0;
 				});
 			}, function(error) {
 				console.log(error);
@@ -85,8 +88,32 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		};
 
 		/**
-		 * Form Functions
+		 * Popup Functions
 		 */
+		$scope.createPopup = function() {
+			if (!$scope.new_popup || !$scope.new_popup.length) return;
+			if ($scope.domains[$scope.domain_index].popups && $scope.domains[$scope.domain_index].popups.length >= 4) {
+				alert("You have the maximum amount of popups allowed for a domain");
+				return;
+			}
+			var newPopup = angular.copy(defaultPopup);
+			newPopup.title = $scope.new_popup;
+			if (!$scope.domains[$scope.domain_index].popups) $scope.domains[$scope.domain_index].popups = [];
+			$scope.domains[$scope.domain_index].popups.push(newPopup);
+			$scope.new_popup = '';
+			$scope.popup_index = $scope.domains[$scope.domain_index].popups.length - 1;
+		};
+
+		$scope.setPopup = function(index) {
+			$scope.popup_index = index;
+		};
+
+		$scope.removePopup = function(index) {
+			var c = confirm("Are you sure you want to delete this Pop-Up?");
+			if (c) $scope.domains[$scope.domain_index].popups.splice(index, 1);
+			$scope.popup_index = $scope.domains[$scope.domain_index].popups.length - 1;
+		};
+
 		$scope.saveAndPreview = function() {
 			LeadCapture.saveDomain(null, $scope.domains[$scope.domain_index], function(response) {
 				$scope.domains[$scope.domain_index] = response;
@@ -97,25 +124,49 @@ angular.module('appDashboard').controller('DashboardController', ['$rootScope', 
 		};
 
 		$scope.addField = function() {
-			$scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.push($scope.fields[$scope.field]);
+			$scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks.push($scope.fields[$scope.field]);
 			$scope.field = 'email';
 			console.log("Field Added: ", $scope.domains[$scope.domain_index]);
 		};	
 
 		$scope.addOption = function(block_index) {
-			console.log($scope.new_option)
-			$scope.domains[$scope.domain_index].forms[$scope.form_index].blocks[block_index].options.push($scope.new_option);
+			$scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks[block_index].options.push($scope.new_option);
 			$scope.new_option = '';
 		};	
 
+		$scope.addEvent = function() {
+
+			// Check for non-allowed duplicate events
+			for (i=0;i<$scope.domains[$scope.domain_index].popups[$scope.popup_index].events.length;i++) {
+				if ($scope.domains[$scope.domain_index].popups[$scope.popup_index].events[i].type === $scope.new_event && $scope.new_event !== 'click') return alert("You can only add one of these events");
+			}
+
+			// Events 
+			if ($scope.new_event === 'timer') $scope.domains[$scope.domain_index].popups[$scope.popup_index].events.push({
+				type: 'timer',
+				time: 2000
+			});
+			if ($scope.new_event === 'click') $scope.domains[$scope.domain_index].popups[$scope.popup_index].events.push({
+				type: 'click',
+				elementID: ''
+			});
+			if ($scope.new_event === 'scroll') $scope.domains[$scope.domain_index].popups[$scope.popup_index].events.push({
+				type: 'scroll'
+			});
+			if ($scope.new_event === 'exit') $scope.domains[$scope.domain_index].popups[$scope.popup_index].events.push({
+				type: 'exit'
+			});
+			$scope.new_event = 'timer';
+		}
+
 		$scope.moveBlock = function(item, index, direction) {
             if (direction === 'up' && index > 0) {
-                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index, 1);
-                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index - 1, 0, item);
+                $scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks.splice(index, 1);
+                $scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks.splice(index - 1, 0, item);
             }
-            if (direction === 'down' && index < $scope.form.blocks.length) {
-                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index, 1);
-                $scope.domains[$scope.domain_index].forms[$scope.form_index].blocks.splice(index + 1, 0, item);
+            if (direction === 'down' && index < $scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks.length) {
+                $scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks.splice(index, 1);
+                $scope.domains[$scope.domain_index].popups[$scope.popup_index].blocks.splice(index + 1, 0, item);
             }
         }
 	}

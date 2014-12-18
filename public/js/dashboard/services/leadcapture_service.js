@@ -15,6 +15,11 @@ angular.module('appDashboard').factory('LeadCapture', function($resource) {
             method: 'PUT',
             isArray: false,
             url: '/domains/:domain'
+        },
+        destroyDomain: {
+            method: 'DELETE',
+            isArray: false,
+            url: '/domains/:domain'
         }
     });
 });
