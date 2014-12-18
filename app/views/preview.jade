@@ -15,5 +15,7 @@ block content
 			button.btn.btn-primary.btn-lg(id="cta-btn", style="font-size:35px;") Click Here
 
 	//- Lead Capture Script
-	script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="#{domain}", data-dashboard="true", data-development="true")
-
+	if (process.env.NODE_ENV === 'production')
+		script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="#{domain}", data-dashboard="true")
+	if (process.env.NODE_ENV !== 'production')
+		script(id='lead-capture-script-tag', type='text/javascript', src='/leadcapture.js', data-domain="#{domain}", data-dashboard="true", data-development="true")
