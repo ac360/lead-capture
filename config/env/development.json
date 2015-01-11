@@ -1,5 +1,4 @@
 {
-    "db": "mongodb://localhost/lead-capture-app",
     "app": {
         "name": "Lead Capture Application",
         "description" : "Captures Leads And Pushes Them To Other Services",

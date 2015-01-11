@@ -74,9 +74,9 @@ gulp.task('server', function() {
 
 
 // Watch Statements
-gulp.task('default', ['jsLint', 'build', 'server'], function() {
+gulp.task('default', ['server'], function() {
 
-	gulp.watch(alljsLocations, ['build', 'server'], function() {});
+	gulp.watch(alljsLocations, ['server'], function() {});
 
 	lrServer.listen(35731, function(err) {
 		if (err) return console.log(err);

@@ -17,7 +17,7 @@ var config = require('./config/config');
 var port = process.env.PORT || config.app.port;
 
 // Connect to our MongoDB Database 
-mongoose.connect(config.db);
+mongoose.connect(process.env.DATABASE);
 mongoose.connection.on('error', function(err) {
 	console.log('Mongoose Connection Error: ' + err);
 });

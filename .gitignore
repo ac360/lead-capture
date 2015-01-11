@@ -5,3 +5,4 @@ node_modules/
 public/libs
 public/dist
 npm-debug.log
+.env
