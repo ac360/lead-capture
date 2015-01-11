@@ -11,6 +11,14 @@ var methodOverride = require('method-override');
 
 // Set Environment from ENV variable or default to development
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Load Local Environment Variables
+if (env === 'development') {
+    var dotenv = require('dotenv');
+    dotenv.load();
+}
+
+// Set Config
 var config = require('./config/config');
 
 // Set Port
@@ -19,23 +27,23 @@ var port = process.env.PORT || config.app.port;
 // Connect to our MongoDB Database 
 mongoose.connect(process.env.DATABASE);
 mongoose.connection.on('error', function(err) {
-	console.log('Mongoose Connection Error: ' + err);
+    console.log('Mongoose Connection Error: ' + err);
 });
 
 // Bootstrap Models
 var models_path = __dirname + '/app/models';
 var walk = function(path) {
-	fs.readdirSync(path).forEach(function(file) {
-		var newPath = path + '/' + file;
-		var stat = fs.statSync(newPath);
-		if (stat.isFile()) {
-			if (/(.*)\.(js|coffee)/.test(file)) {
-				require(newPath);
-			}
-		} else if (stat.isDirectory()) {
-			walk(newPath);
-		}
-	});
+    fs.readdirSync(path).forEach(function(file) {
+        var newPath = path + '/' + file;
+        var stat = fs.statSync(newPath);
+        if (stat.isFile()) {
+            if (/(.*)\.(js|coffee)/.test(file)) {
+                require(newPath);
+            }
+        } else if (stat.isDirectory()) {
+            walk(newPath);
+        }
+    });
 };
 walk(models_path);
 
@@ -47,13 +55,13 @@ app.use(cookieParser());
 
 // Express Cookie-Based Session
 app.use(session({
-	name: 'leadcaptureapp',
-	secret: 'leadcaptureapp84736',
-	secureProxy: false, // Set to true if you have an SSL Certificate
-	cookie: {
-		secure: false, // Secure is Recommeneded, However it requires an HTTPS enabled website (SSL Certificate)
-		maxAge: 864000000 // 10 Days in miliseconds
-	}
+    name: 'leadcaptureapp',
+    secret: 'leadcaptureapp84736',
+    secureProxy: false, // Set to true if you have an SSL Certificate
+    cookie: {
+        secure: false, // Secure is Recommeneded, However it requires an HTTPS enabled website (SSL Certificate)
+        maxAge: 864000000 // 10 Days in miliseconds
+    }
 }));
 
 // Favicon
@@ -66,10 +74,10 @@ app.set('view engine', 'jade');
 // Get req.body as JSON when receiving POST requests
 app.use(bodyParser.json()); // parse application/json 
 app.use(bodyParser.json({
-	type: 'application/vnd.api+json'
+    type: 'application/vnd.api+json'
 })); // parse application/vnd.api+json as json
 app.use(bodyParser.urlencoded({
-	extended: true
+    extended: true
 })); // parse application/x-www-form-urlencoded
 
 // override with the X-HTTP-Method-Override header in the request. simulate DELETE/PUT
