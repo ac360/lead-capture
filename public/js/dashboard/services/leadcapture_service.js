@@ -14,7 +14,7 @@ angular.module('appDashboard').factory('LeadCapture', function($resource) {
         saveDomain: {
             method: 'PUT',
             isArray: false,
-            url: '/domains/:domain'
+            url: '/domains/:domain_name'
         },
         listTags: {
             method: 'GET',

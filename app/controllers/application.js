@@ -209,7 +209,23 @@ var saveDomain = function(req, res, next) {
             if (error) return res.status(500).json({
                 error: error
             });
-            res.json(response);
+
+            var populateQuery = [{
+                path: 'popups.default_tags',
+                select: '_id tag'
+            }, {
+                path: 'popups.blocks.select_options.tag',
+                select: '_id tag'
+            }];
+
+            Domain.find({
+                _id: response._id
+            }).limit(1).populate(populateQuery).exec(function(error, domains) {
+                if (error) return res.status(500).json({
+                    error: error
+                });
+                res.json(domains[0]);
+            });
         });
     })
 };
@@ -223,7 +239,6 @@ var destroyDomain = function(req, res, next) {
         domain_name: req.params.domain_name,
         user: req.session.user._id
     }).exec(function(error, record) {
-        console.log(error, record)
         if (error) return res.status(500).json({
             error: error
         });

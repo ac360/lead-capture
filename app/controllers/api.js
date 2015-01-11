@@ -14,7 +14,6 @@ var mongoose = require('mongoose'),
  * 
  */
 var initializeDomain = function(req, res) {
-    console.log(req.params.domain)
     Domain.findOne({domain: req.params.domain}).exec(function(error, domain) {
         if (error) return res.status(500).json({
             error: error
