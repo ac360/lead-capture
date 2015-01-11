@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     User = mongoose.model('User'),
     Domain = mongoose.model('Domain'),
+    Tag = mongoose.model('Tag'),
     config = require('../../config/config');
 
 
@@ -17,7 +18,9 @@ var variables = {
 };
 
 var checkSession = function(req, res, next) {
-    if (!req.session.user) return res.status(401).json({error: "Unauthorized"})
+    if (!req.session.user) return res.status(401).json({
+        error: "Unauthorized"
+    })
     return next();
 };
 
@@ -37,8 +40,8 @@ var preview = function(req, res) {
     if (req.session.user) {
         variables.domain = req.params.domain;
         res.render('preview', variables);
-    } else{
-      res.render('home', variables);
+    } else {
+        res.render('home', variables);
     }
 };
 
@@ -56,7 +59,9 @@ var logout = function(req, res) {
  */
 var signup = function(req, res, next) {
     // Check Required Params
-    if (!req.body.email || !req.body.password) return res.status(400).json({ error: 'Missing required fields' });
+    if (!req.body.email || !req.body.password) return res.status(400).json({
+        error: 'Missing required fields'
+    });
     // Save User
     var user = new User();
     user.email = req.body.email;
@@ -67,9 +72,13 @@ var signup = function(req, res, next) {
         // Check for Conflict
         if (error) {
             if (error.code && error.code === 11000) {
-                if (error.err.indexOf('email') > -1) return res.status(409).json({ error: 'Email already registered' });
+                if (error.err.indexOf('email') > -1) return res.status(409).json({
+                    error: 'Email already registered'
+                });
             } else {
-                return res.status(500).json({ error: error });
+                return res.status(500).json({
+                    error: error
+                });
             }
         }
         // Save Session & Redirect
@@ -86,23 +95,48 @@ var signin = function(req, res, next) {
     User.findOne({
         email: req.body.email
     }).exec(function(error, user) {
-        if (error) return res.status(500).json({ error: error });
-        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (error) return res.status(500).json({
+            error: error
+        });
+        if (!user) return res.status(404).json({
+            error: 'User not found'
+        });
         // Check Password
-        if (!user.authenticate(req.body.password)) res.status(401).json({ error: 'Unauthorized'});
+        if (!user.authenticate(req.body.password)) res.status(401).json({
+            error: 'Unauthorized'
+        });
         // Save Session & Redirect
         req.session.user = user;
         return res.redirect('/');
     });
 };
 
+
+
+// -------------- DOMAINS
+
+
 /**
  * List Domains
  */
 
 var listDomains = function(req, res, next) {
-    Domain.find({ user: req.session.user._id }).sort({ created: -1 }).exec(function(error, domains) {
-        if (error) return res.status(500).json({ error: error });
+    var populateQuery = [{
+        path: 'popups.default_tags',
+        select: '_id tag'
+    }, {
+        path: 'popups.blocks.select_options.tag',
+        select: '_id tag'
+    }];
+    // Find Domains
+    Domain.find({
+        user: req.session.user._id
+    }).populate(populateQuery).sort({
+        created: -1
+    }).exec(function(error, domains) {
+        if (error) return res.status(500).json({
+            error: error
+        });
         res.json(domains);
     });
 };
@@ -114,14 +148,16 @@ var listDomains = function(req, res, next) {
 var createDomain = function(req, res, next) {
     var domain = new Domain(req.body);
     // Format URL
-    domain.domain = domain.domain.replace('http://', '').replace('http://', '').replace('www.', '').toLowerCase();
-    if (domain.domain.indexOf('/') > -1) domain.domain = domain.domain.split('/')[0];
-    if (domain.domain.indexOf('?') > -1) domain.domain = domain.domain.split('?')[0];
+    domain.domain_name = domain.domain_name.replace('http://', '').replace('http://', '').replace('www.', '').toLowerCase();
+    if (domain.domain_name.indexOf('/') > -1) domain.domain_name = domain.domain_name.split('/')[0];
+    if (domain.domain_name.indexOf('?') > -1) domain.domain_name = domain.domain_name.split('?')[0];
     // Add User
     domain.user = req.session.user._id;
     // Save
     domain.save(function(error, response) {
-        if (error) return res.status(500).json({ error: error });
+        if (error) return res.status(500).json({
+            error: error
+        });
         res.json(response);
     });
 };
@@ -131,13 +167,48 @@ var createDomain = function(req, res, next) {
  */
 
 var saveDomain = function(req, res, next) {
-    Domain.findOne({ _id: req.body._id, user: req.session.user._id }).exec(function(error, domain) {
-        if (error) return res.status(500).json({ error: error });
-        if (!domain) return res.status(404).json({ error: "Domain not found" });
+    Domain.find({
+        _id: req.body._id,
+        user: req.session.user._id
+    }).limit(1).exec(function(error, domains) {
+        if (error) return res.status(500).json({
+            error: error
+        });
+        if (!domains.length) return res.status(404).json({
+            error: "Domain not found"
+        });
 
-        domain = _.assign(domain, req.body);
+        var domain = domains[0];
+
+        // Sanitize New Data
+        // Reduce Tag Objects To Their IDs
+        for (i = 0; i < req.body.popups.length; i++) {
+
+            // Sanitze Default Tags
+            for (j = 0; j < req.body.popups[i].default_tags.length; j++) {
+                req.body.popups[i].default_tags[j] = req.body.popups[i].default_tags[j]._id;
+            };
+
+            // Iterate Through Pop-Up Form Fields
+            for (j = 0; j < req.body.popups[i].blocks.length; j++) {
+                if (req.body.popups[i].blocks[j].type === 'select') {
+                    // Iterate Through Select Field Options & Sanitize Each Tag
+                    for (k = 0; k < req.body.popups[i].blocks[j].select_options.length; k++) {
+                        if (req.body.popups[i].blocks[j].select_options[k].tag) req.body.popups[i].blocks[j].select_options[k].tag = req.body.popups[i].blocks[j].select_options[k].tag._id;
+                    };
+                }
+            };
+        };
+
+        // Update Domain
+        domain.domain = req.body.domain;
+        domain.popups = req.body.popups;
+
+        // Save Domain
         domain.save(function(error, response) {
-            if (error) return res.status(500).json({ error: error });
+            if (error) return res.status(500).json({
+                error: error
+            });
             res.json(response);
         });
     })
@@ -148,15 +219,108 @@ var saveDomain = function(req, res, next) {
  */
 
 var destroyDomain = function(req, res, next) {
-    Domain.findOne({ domain: req.params.domain, user: req.session.user._id }).exec(function(error, record) {
-        if (error) return res.status(500).json({ error: error });
-        if (!record) return res.status(404).json({ error: 'Domain not found' });
+    Domain.findOne({
+        domain_name: req.params.domain_name,
+        user: req.session.user._id
+    }).exec(function(error, record) {
+        console.log(error, record)
+        if (error) return res.status(500).json({
+            error: error
+        });
+        if (!record) return res.status(404).json({
+            error: 'Domain not found'
+        });
         record.remove(function(error, response) {
-            if (error) return res.status(500).json({ error: error });
-            res.json({ _id: response._id, message: "Domain sucessfully deleted" });
+            if (error) return res.status(500).json({
+                error: error
+            });
+            res.json({
+                _id: response._id,
+                message: "Domain sucessfully deleted"
+            });
         });
     });
 };
+
+
+// -------------- TAGS
+
+/**
+ * List Tags
+ */
+
+var listTags = function(req, res, next) {
+    Tag.find({
+        user: req.session.user._id
+    }).exec(function(error, tags) {
+        if (error) return res.status(500).json({
+            error: error
+        });
+        res.json(tags);
+    });
+};
+
+
+/**
+ * Save Tag
+ */
+
+var saveTag = function(req, res, next) {
+    // Add User
+    req.body.user = req.session.user._id;
+
+    // Check If New Or Existing Tag
+    if (!req.body._id) {
+        // Create New Tag
+        var tag = new Tag(req.body);
+        // Save
+        tag.save(function(error, response) {
+            if (error) return res.status(500).json({
+                error: error
+            });
+            res.json(response);
+        });
+    } else {
+        // Update Existing Tag
+        var tag = req.body;
+        Tag.update({
+            _id: tag._id
+        }, {
+            tag: tag.tag
+        }, function(error, tag) {
+            if (error) return res.status(500).json({
+                error: error
+            });
+            res.json(response);
+        });
+    }
+};
+
+
+/**
+ * Delete Tag
+ */
+
+var destroyTag = function(req, res, next) {
+    // Find Tag
+    Tag.find({
+        _id: req.params.tagID,
+        user: req.session.user._id
+    }).limit(1).exec(function(error, tags) {
+        if (error) return res.status(500).json({
+            error: error
+        });
+        if (!tags) return res.status(404).json({
+            error: 'Tag Not Found'
+        });
+        var tag = tags[0];
+        // Delete Tag
+        tag.remove(function(error, response) {
+            res.json(response);
+        });
+    });
+};
+
 
 
 module.exports = {
@@ -169,7 +333,10 @@ module.exports = {
     listDomains: listDomains,
     createDomain: createDomain,
     saveDomain: saveDomain,
-    destroyDomain: destroyDomain
+    destroyDomain: destroyDomain,
+    listTags: listTags,
+    saveTag: saveTag,
+    destroyTag: destroyTag
 };
 
 // End

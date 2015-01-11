@@ -22,12 +22,15 @@ module.exports = function(app) {
 	// Application Routes
 	app.get('/domains', application.checkSession, application.listDomains);
 	app.post('/domains', application.checkSession, application.createDomain);
-	app.delete('/domains/:domain', application.checkSession, application.destroyDomain);
+	app.delete('/domains/:domain_name', application.checkSession, application.destroyDomain);
 	app.put('/domains', application.checkSession, application.saveDomain);
+	app.delete('/tags/:tagID', application.checkSession, application.destroyTag);
+	app.get('/tags', application.checkSession, application.listTags);
+	app.post('/tags', application.checkSession, application.saveTag);
 	app.post('/signup', application.signup);
 	app.post('/signin', application.signin);
 	app.get('/logout', application.logout);
-	app.get('/preview/:domain', application.preview);
+	app.get('/preview/:domain_name', application.preview);
 	app.get('/', application.index);
 
 };

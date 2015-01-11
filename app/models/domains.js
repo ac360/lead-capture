@@ -21,15 +21,47 @@ var DomainSchema = new Schema({
         ref: 'User',
         required: true
     },
-    domain: {
+    domain_name: {
         type: String,
         required: true,
         unique: true
     },
-    popups: {
-        type: Schema.Types.Mixed,
-        default: []
-    }
+    popups: [{
+        title: {
+            type: String,
+            trim: true
+        },
+        cta1: {
+            type: String,
+            trim: true
+        },
+        cta2: {
+            type: String,
+            trim: true
+        },
+        events: [],
+        default_tags: [{
+            type: Schema.ObjectId,
+            ref: 'Tag'
+        }],
+        blocks: [{
+            type: {
+                type: String
+            },
+            title: {
+                type: String
+            },
+            select_options: [{
+                option: {
+                    type: String
+                },
+                tag: {
+                    type: Schema.ObjectId,
+                    ref: 'Tag'
+                }
+            }]
+        }]
+    }]
 });
 
 DomainSchema.set('autoIndex', false);

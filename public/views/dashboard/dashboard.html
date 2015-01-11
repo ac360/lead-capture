@@ -1,213 +1,275 @@
 <div id="dashboard-page" class="animated fadeIn" data-ng-controller="DashboardController" data-ng-init="initialize()">
 
-	<!-- Dashboard Header -->
+    <!-- Dashboard Header -->
 
-	<div class="clearfix"></div>
+    <div class="clearfix"></div>
 
-	<!-- Dashboard Navigation -->
-	<div id="dashboard-navigation">
-		<span style="font-size:16px;">Pop-Up Dashboard</span>
-		<ul class="list-inline pull-right" >
-			<li>
-				<a class="pull-right" href="/logout" >Sign Out</a>
-			</li>
-		</ul>
-	</div>
+    <!-- Dashboard Navigation -->
+    <div id="dashboard-navigation">
+        <span style="font-size:16px;">Pop-Up Dashboard</span>
+        <ul class="list-inline pull-right">
+            <li>
+                <a class="pull-right" href="/logout">Sign Out</a>
+            </li>
+        </ul>
+    </div>
 
-	<div class="clearfix"></div>
+    <div class="clearfix"></div>
 
-	<!-- Dashboard Content -->
-	<div id="dashboard-content" >
+    <!-- Dashboard Content -->
+    <div id="dashboard-content">
 
-		<div id="popup-select">
+        <div id="popup-select">
 
-			<p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;" data-ng-show="domains.length">Current Domain:</p>
-			<p class="st-red" style="padding-left:10px;font-size:16px;margin-bottom:20px;" data-ng-show="domains.length">
-				{{ domains[domain_index].domain }}
-			</p>
+            <!-- Current Domain -->
+            <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;" data-ng-show="domains.length">Current Domain:</p>
+            <p class="st-red" style="padding-left:10px;font-size:16px;margin-bottom:20px;" data-ng-show="domains.length">
+                {{ domains[domain_index].domain_name }}
+            </p>
 
-			<p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;">Domains:</p>
-			<table id="domains-table" class="table">
-				<tr>
-					<td style="vertical-align:middle;">
-						<i class="st-red fa fa-plus st-link" data-ng-click="createDomain()"></i>
-					</td>
-					<td >
-						<input type="text" data-ng-model="new_domain" style="border:0px;border-bottom:1px dashed rgba(0,0,0,0.15);background:none;width:100%;height:25px;width:80%;margin:0px auto;text-align:left;font-size:12px;padding:4px 0px;" placeholder="New Domain (me.com)">
-					</td>
-				</tr>
-				<tr data-ng-repeat="domain in domains track by $id($index)">
-					<td>
-						<i class="st-red fa fa-close st-link" data-ng-click="destroyDomain(domain, index)"></i>
-					</td>
-					<td>
-						<span class="st-link" data-ng-click="alert('Not working yet!')">{{ domain.domain }}</span>
-					</td>
-				</tr>
-			</table>
+            <!-- Domains -->
+            <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;">Domains:</p>
+            <table id="domains-table" class="table">
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <i class="st-red fa fa-plus st-link" data-ng-click="createDomain()"></i>
+                    </td>
+                    <td>
+                        <input type="text" data-ng-model="new_domain" style="border:0px;border-bottom:1px dashed rgba(0,0,0,0.15);background:none;width:100%;height:25px;width:80%;margin:0px auto;text-align:left;font-size:12px;padding:4px 0px;" placeholder="New Domain (me.com)">
+                    </td>
+                </tr>
+                <tr data-ng-repeat="domain in domains track by $id($index)">
+                    <td>
+                        <i class="st-red fa fa-close st-link" data-ng-click="destroyDomain(domain, index)"></i>
+                    </td>
+                    <td>
+                        <span class="st-link" data-ng-click="setDomainIndex($index)">{{ domain.domain_name }}</span>
+                    </td>
+                </tr>
+            </table>
 
-			<p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:20px;" data-ng-show="domains.length">Popups:</p>
-			<table id="domains-table" class="table" data-ng-show="domains.length">
-				<tr>
-					<td style="vertical-align:middle;">
-						<i class="st-red fa fa-plus st-link" data-ng-click="createPopup()"></i>
-					</td>
-					<td >
-						<input type="text" data-ng-model="new_popup" style="border:0px;border-bottom:1px dashed rgba(0,0,0,0.15);background:none;width:100%;height:25px;width:80%;margin:0px auto;text-align:left;font-size:12px;padding:4px 0px;" placeholder="New Pop-Up Title">
-					</td>
-				</tr>
-				<tr  data-ng-repeat="popup in domains[domain_index].popups track by $id($index)">
-					<td>
-						<i class="st-red fa fa-close st-link" data-ng-click="removePopup($index)"></i>
-					</td>
-					<td>
-						<span class="st-link" data-ng-click="setPopup($index)">{{ popup.title }}</span>
-					</td>
-				</tr>
-			</table>
+            <!-- PopUps -->
+            <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:20px;" data-ng-show="domains.length">Popups:</p>
+            <table id="domains-table" class="table" data-ng-show="domains.length">
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <i class="st-red fa fa-plus st-link" data-ng-click="createPopup()"></i>
+                    </td>
+                    <td>
+                        <input type="text" data-ng-model="new_popup" style="border:0px;border-bottom:1px dashed rgba(0,0,0,0.15);background:none;width:100%;height:25px;width:80%;margin:0px auto;text-align:left;font-size:12px;padding:4px 0px;" placeholder="New Pop-Up Title">
+                    </td>
+                </tr>
+                <tr data-ng-repeat="popup in domains[domain_index].popups track by $id($index)">
+                    <td>
+                        <i class="st-red fa fa-close st-link" data-ng-click="removePopup($index)"></i>
+                    </td>
+                    <td>
+                        <span class="st-link" data-ng-click="setPopupIndex($index)">{{ popup.title }}</span>
+                    </td>
+                </tr>
+            </table>
 
-		</div>
-		
-		<div id="popup-builder">
+            <!-- Tags -->
+            <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:20px;">Tags:</p>
+            <table id="tags-table" class="table">
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <i class="st-red fa fa-plus st-link" data-ng-click="saveTag()"></i>
+                    </td>
+                    <td>
+                        <input type="text" data-ng-model="new_tag" style="border:0px;border-bottom:1px dashed rgba(0,0,0,0.15);background:none;width:100%;height:25px;width:80%;margin:0px auto;text-align:left;font-size:12px;padding:4px 0px;" placeholder="New Tag" maxlength="30">
+                    </td>
+                </tr>
+                <tr data-ng-repeat="tag in tags track by $id($index)">
+                    <td>
+                        <i class="st-red fa fa-close st-link" data-ng-click="removeTag(tag)"></i>
+                    </td>
+                    <td>
+                        <span class="st-red">{{ tag.tag }}</span>
+                    </td>
+                </tr>
+            </table>
 
-			<div class="st-centered main-tip st-sign-outer animated bounceInUp" data-ng-show="!domains.length">
-				<div class="st-sign-inner" style="font-size:14px;">
-					Add the domain of a website you own  
-					<br/>
-					in this format: "mydomain.com"
-				</div>
-			</div>
+        </div>
 
-			<div class="st-centered main-tip st-sign-outer animated bounceInUp" data-ng-show="domains.length && !domains[domain_index].popups.length">
-				<div class="st-sign-inner" style="font-size:14px;">
-					Make a Pop-Up by entering in a title.  
-					<br/>
-					 Like, "Pop 1"
-				</div>
-			</div>
+        <div id="popup-builder">
 
-			<div id="popup-outer" class="animated bounceInUp" data-ng-show="domains[domain_index].popups.length">
-				<div id="popup-inner">
+            <div class="st-centered main-tip st-sign-outer animated bounceInUp" data-ng-show="!domains.length">
+                <div class="st-sign-inner" style="font-size:14px;">
+                    Add the domain of a website you own
+                    <br/> in this format: "mydomain.com"
+                </div>
+            </div>
 
-					<div class="popup-top" style="display:block;width:100%;height:40px;">
-						<!-- popup Title Input -->
-						<div class="title" style="display:block;float:left;width:230px;height:40px;margin:0px;padding-top:3px;padding-right:5px;">
-							<input type="text" data-ng-model="domains[domain_index].popups[popup_index].title" style="float:left;padding:3px;border:0px;background:none;width:100%;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Popup Title">
-							
-						</div>
-						<div class="add-field" style="display:block;float:right;width:130px;height:30px;text-align:right">
-							<select class="form-control input-sm" data-ng-options="field for field in field_types" data-ng-model="field" style="float:left;text-transform: capitalize!important;width:100px;margin:0px 0px"></select>
-							<span class="st-link" style="font-size:23px;" data-ng-click="addField()">
+            <div class="st-centered main-tip st-sign-outer animated bounceInUp" data-ng-show="domains.length && !domains[domain_index].popups.length">
+                <div class="st-sign-inner" style="font-size:14px;">
+                    Make a Pop-Up by entering in a title.
+                    <br/> Like, "Pop 1"
+                </div>
+            </div>
+
+            <div id="popup-outer" class="animated bounceInUp" data-ng-show="domains[domain_index].popups.length">
+                <div id="popup-inner">
+
+                    <div class="popup-top" style="display:block;width:100%;height:40px;">
+                        <!-- popup Title Input -->
+                        <div class="title" style="display:block;float:left;width:230px;height:40px;margin:0px;padding-top:3px;padding-right:5px;">
+                            <input type="text" data-ng-model="domains[domain_index].popups[popup_index].title" style="float:left;padding:3px;border:0px;background:none;width:100%;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Popup Title">
+
+                        </div>
+                        <div class="add-field" style="display:block;float:right;width:130px;height:30px;text-align:right">
+                            <select class="form-control input-sm" data-ng-options="field for field in field_types" data-ng-model="field" style="float:left;text-transform: capitalize!important;width:100px;margin:0px 0px"></select>
+                            <span class="st-link" style="font-size:23px;" data-ng-click="addField()">
 								<i class="fa fa-plus"></i>
 							</span>
-						</div>
-					</div>
+                        </div>
+                    </div>
 
-					<!-- popup CTA1 Input -->
-					<div class="cta1">
-						<input type="text" data-ng-model="domains[domain_index].popups[popup_index].cta1" style="border:0px;background:none;width:100%;margin:10px auto 5px auto;text-align:center;font-size:22px;font-weight:500;color:rgba(0,0,0,0.8)">
-					</div>
+                    <!-- popup CTA1 Input -->
+                    <div class="cta1">
+                        <input type="text" data-ng-model="domains[domain_index].popups[popup_index].cta1" style="border:0px;background:none;width:100%;margin:10px auto 5px auto;text-align:center;font-size:22px;font-weight:500;color:rgba(0,0,0,0.8)">
+                    </div>
 
-					<!-- popup CTA2 Input -->
-					<div class="cta2">
-						<textarea data-ng-model="domains[domain_index].popups[popup_index].cta2" style="border:0px;background:none;width:100%;height:35px;margin:0px auto 5px auto;text-align:center;font-size:14px;font-weight:normal;color:rgba(0,0,0,0.8);resize:vertical;"></textarea>
-					</div>
-
-					<p id="lead-capture-error" style="text-align:center;padding:10px;display:none;"></p>
-					<p id="lead-capture-success" style="text-align:center;padding:10px;display:none;"></p>
-
-					<!-- Editable popup Block -->
-					<div class="editable-popup-block" data-ng-repeat="block in domains[domain_index].popups[popup_index].blocks track by $id($index)">
-						<p data-ng-if="block.type !== 'select'" class="st-centered" style="margin-bottom:4px;">
-							<span data-ng-show="block.type === 'full_name'">Full Name</span>
-							<span data-ng-show="block.type === 'email'">Email</span>
-						</p>
-
-						<div class="select-title" data-ng-show="block.type === 'select'">
-							<input type="text" data-ng-model="block.title" style="border:0px;background:none;width:100%;margin:0px auto;text-align:center;font-size:12px;">
-						</div>
-
-						<!-- Input Full Name -->
-						<input data-ng-if="block.type === 'full_name'" type="text" class="form-control st-centered" placeholder="John Richards">
-						<!-- Input Email -->
-						<input data-ng-if="block.type === 'email'" type="email" class="form-control st-centered" placeholder="john@gmail.com">
-						<!-- Input Select -->
-						<select data-ng-show="block.type === 'select'"  class="form-control input-sm">
-							<option data-ng-repeat="option in block.options track by $id($index)">{{ option }}</option>
-						</select>
-						<div class="select-options" data-ng-show="block.type === 'select'">
-							<table class="table options-table" style="width:60%;margin:10px 0px;">
-								<tr>
-									<td>
-										<i class="st-red fa fa-plus st-link" data-ng-click="addOption($index)"></i>
-									</td>
-									<td >
-										<input type="text" data-ng-model="$parent.new_option" style="border:0px;background:none;width:100%;height:15px;margin:0px auto;text-align:left;font-size:12px;padding:0px;" placeholder="Enter New Option Here">
-									</td>
-								</tr>
-								<tr data-ng-repeat="option in block.options track by $id($index)">
-									<td>
-										<i class="st-red fa fa-close st-link" data-ng-click="block.options.splice($index, 1)"></i>
-									</td>
-									<td>
-										{{ option }}
-									</td>
-								</tr>
-							</table>
-						</div>
+                    <!-- popup CTA2 Input -->
+                    <div class="cta2">
+                        <textarea data-ng-model="domains[domain_index].popups[popup_index].cta2" style="border:0px;background:none;width:100%;height:35px;margin:0px auto 5px auto;text-align:center;font-size:14px;font-weight:normal;color:rgba(0,0,0,0.8);resize:vertical;"></textarea>
+                    </div>
 
 
-						<div class="editable-popup-block-options ">
-							<i class="st-red fa fa-chevron-up st-link" data-ng-click="moveBlock(block, $index, 'up')"></i>
-							<i class="st-red fa fa-chevron-down st-link" data-ng-click="moveBlock(block, $index, 'down')"></i>
-							<i class="st-red fa fa-close st-link" data-ng-click="domains[domain_index].popups[popup_index].blocks.splice($index, 1)"></i>
-						</div>
-					</div>
+                    <p class="st-font" style="font-size:10px;text-align:center;opacity:0.3;margin:15px 0px 0px 0px">Pop-Up Fields</p>
+                    <hr style="border-top:1px dashed rgba(0,0,0,0.15);margin:4px 0px 20px 0px">
 
-					<div id="popup-events" class="editable-popup-block">
-						<p style="font-size:12px;margin-bottom:5px;">Pop-Up Events:</p>
+                    <!-- Editable popup Block -->
+                    <div class="editable-popup-block" data-ng-repeat="block in domains[domain_index].popups[popup_index].blocks track by $id($index)">
+                        <p data-ng-if="block.type !== 'select'" class="st-centered" style="margin-bottom:4px;">
+                            <span data-ng-show="block.type === 'full_name'">Full Name</span>
+                            <span data-ng-show="block.type === 'email'">Email</span>
+                        </p>
 
-						<div style="display:block;height:40px;width:100%;">
-							<div style="display:block;float:left;width:65%;text-align:right;padding-right:15px;">
-								<select class="form-control" data-ng-model="new_event" style="width:150px;margin:0px;float:right;">
-									<option value="timer">Timer</option>
-									<option value="click">Click</option>
-									<option value="exit">Exit</option>
-									<option value="scroll">Scroll</option>
-								</select>
-							</div>
-							<div style="display:block;float:left;width:35%;text-align:left;padding-top:7px;">
-								<i class="st-red fa fa-plus st-link" data-ng-click="addEvent()" style="font-size:20px;"></i>
-							</div>
-						</div>
+                        <div class="select-title" data-ng-show="block.type === 'select'">
+                            <input type="text" data-ng-model="block.title" style="border:0px;background:none;width:100%;margin:0px auto;text-align:center;font-size:12px;">
+                        </div>
 
-						<table id="events-table" class="table">
-							<tr data-ng-repeat="event in domains[domain_index].popups[popup_index].events track by $id($index)">
-								<td style="font-size:14px;vertical-align:middle;width:30px;-webkit-border-radius:3px 0px 0px 3px;border-radius:3px 0px 0px 3px;">
-									<i class="st-red fa fa-close st-link" data-ng-click="domains[domain_index].popups[popup_index].events.splice($index, 1)"></i>
-								</td>
-								<td style="font-size:14px;text-transform:capitalize;vertical-align:middle;text-align:center;">
-									{{ event.type }}
-								</td>
-								<td style="-webkit-border-radius:0px 3px 3px 0px;border-radius:0px 3px 3px 0px;">
-									<p class="st-centered" data-ng-show="event.type === 'timer'" style="margin-bottom:0px;">Miliseconds:</p>
-									<input type="text" class="form-control input-sm st-centered" data-ng-model="event.time" data-ng-show="event.type === 'timer'" style="width:100px;margin:0px auto;padding:2px;height:24px;">
-									<p class="st-centered" data-ng-show="event.type === 'click'" style="margin-bottom:0px;">Element ID:</p>
-									<input type="text" class="form-control input-sm st-centered" data-ng-model="event.elementID" data-ng-show="event.type === 'click'" style="width:100px;margin:0px auto;padding:2px;height:24px;">
-								</td>
-							</tr>
-						</table>
-					</div>
+                        <!-- Input Full Name -->
+                        <input data-ng-if="block.type === 'full_name'" type="text" class="form-control st-centered" placeholder="John Richards">
+                        <!-- Input Email -->
+                        <input data-ng-if="block.type === 'email'" type="email" class="form-control st-centered" placeholder="john@gmail.com">
+                        <!-- Input Select -->
+                        <select data-ng-show="block.type === 'select'" class="form-control input-sm">
+                            <option data-ng-repeat="option in block.select_options track by $id($index)">{{ option.option }}</option>
+                            <!-- No Options -->
+                            <option data-ng-show="!block.select_options.length" disabled style="opacity:0.5">Enter Options Below...</option>
+                        </select>
+                        <div class="select-options" data-ng-show="block.type === 'select'">
+                            <table class="table options-table">
+                                <tr>
+                                    <td>
+                                        <i class="st-red fa fa-plus st-link" data-ng-click="addOption($index)"></i>
+                                    </td>
+                                    <td>
+                                        <input type="text" data-ng-model="$parent.new_option.option" style="border:0px;background:none;width:100%;height:15px;margin:0px auto;text-align:left;font-size:12px;padding:0px;" placeholder="Enter New Option Here">
+                                    </td>
+                                    <td style="padding:0px 0px 5px 0px!important">
+                                        <select data-ng-model="$parent.new_option.tag" class="form-control input-sm">
+                                            <option value="" disabled>Select A Tag...</option>
+                                            <option data-ng-repeat="tag in tags" data-ng-value="$index">{{ tag.tag }}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr data-ng-repeat="option in block.select_options track by $id($index)">
+                                    <td>
+                                        <i class="st-red fa fa-close st-link" data-ng-click="block.select_options.splice($index, 1)"></i>
+                                    </td>
+                                    <td>
+                                        {{ option.option }}
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-tag st-red"></i> {{ option.tag.tag }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
-					<div class="popup-group" style="margin:25px 0px">
-						<button class="btn btn-primary btn-lg" style="letter-spacing:-1.5px;" data-ng-click="saveAndPreview()">Save & Preview</button>
-					</div>
-				</div>
-			</div>
-		</div>
 
-	</div>
+                        <div class="editable-popup-block-options ">
+                            <i class="st-red fa fa-chevron-up st-link" data-ng-click="moveBlock(block, $index, 'up')"></i>
+                            <i class="st-red fa fa-chevron-down st-link" data-ng-click="moveBlock(block, $index, 'down')"></i>
+                            <i class="st-red fa fa-close st-link" data-ng-click="domains[domain_index].popups[popup_index].blocks.splice($index, 1)"></i>
+                        </div>
+                    </div>
 
-	<div class="clearfix"></div>
+                    <p class="st-font" style="font-size:10px;text-align:center;opacity:0.3;margin:15px 0px 0px 0px">Pop-Up Options</p>
+                    <hr style="border-top:1px dashed rgba(0,0,0,0.15);margin:4px 0px 20px 0px">
+
+                    <div id="popup-events" class="editable-popup-block">
+                        <p style="font-size:12px;margin-bottom:5px;">Pop-Up Events:</p>
+
+                        <div style="display:block;height:40px;width:100%;">
+                            <div style="display:block;float:left;width:65%;text-align:right;padding-right:15px;">
+                                <select class="form-control" data-ng-model="new_event" style="width:150px;margin:0px;float:right;">
+                                    <option value="timer">Timer</option>
+                                    <option value="click">Click</option>
+                                    <option value="exit">Exit</option>
+                                    <option value="scroll">Scroll</option>
+                                </select>
+                            </div>
+                            <div style="display:block;float:left;width:35%;text-align:left;padding-top:7px;">
+                                <i class="st-red fa fa-plus st-link" data-ng-click="addEvent()" style="font-size:20px;"></i>
+                            </div>
+                        </div>
+
+                        <table id="events-table" class="table">
+                            <tr data-ng-repeat="event in domains[domain_index].popups[popup_index].events track by $id($index)">
+                                <td style="font-size:14px;vertical-align:middle;width:30px;-webkit-border-radius:3px 0px 0px 3px;border-radius:3px 0px 0px 3px;">
+                                    <i class="st-red fa fa-close st-link" data-ng-click="domains[domain_index].popups[popup_index].events.splice($index, 1)"></i>
+                                </td>
+                                <td style="font-size:14px;text-transform:capitalize;vertical-align:middle;text-align:center;">
+                                    {{ event.type }}
+                                </td>
+                                <td style="-webkit-border-radius:0px 3px 3px 0px;border-radius:0px 3px 3px 0px;">
+                                    <p class="st-centered" data-ng-show="event.type === 'timer'" style="margin-bottom:0px;">Miliseconds:</p>
+                                    <input type="text" class="form-control input-sm st-centered" data-ng-model="event.time" data-ng-show="event.type === 'timer'" style="width:100px;margin:0px auto;padding:2px;height:24px;">
+                                    <p class="st-centered" data-ng-show="event.type === 'click'" style="margin-bottom:0px;">Element ID:</p>
+                                    <input type="text" class="form-control input-sm st-centered" data-ng-model="event.elementID" data-ng-show="event.type === 'click'" style="width:100px;margin:0px auto;padding:2px;height:24px;">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div id="popup-default-tags" class="editable-popup-block">
+                        <p style="font-size:12px;margin-bottom:5px;">Default Pop-Up Tags:</p>
+                        <table id="default-tags-table" class="table">
+                            <tr>
+                                <td>
+                                    <i class="st-red fa fa-plus st-link" data-ng-click="addDefaultTag($index)"></i>
+                                </td>
+                                <td style="padding:0px 0px 5px 0px!important">
+                                    <select data-ng-model="default_tag_index" class="form-control input-sm">
+                                        <option value="" disabled>Add Default Tags For This Pop-Up...</option>
+                                        <option data-ng-repeat="tag in tags" data-ng-value="$index">{{ tag.tag }}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr data-ng-repeat="tag in domains[domain_index].popups[popup_index].default_tags track by $id($index)">
+                                <td style="width:10%;">
+                                    <i class="st-red fa fa-close st-link" data-ng-click="domains[domain_index].popups[popup_index].default_tags.splice($index, 1)"></i>
+                                </td>
+                                <td style="text-align:left;">
+                                    <i class="fa fa-tag st-red"></i> {{ tag.tag }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="popup-group" style="margin:25px 0px">
+                        <button class="btn btn-primary btn-lg" style="letter-spacing:-1.5px;" data-ng-click="saveAndPreview()">Save & Preview</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="clearfix"></div>
 
 </div>

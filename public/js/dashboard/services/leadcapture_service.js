@@ -16,10 +16,25 @@ angular.module('appDashboard').factory('LeadCapture', function($resource) {
             isArray: false,
             url: '/domains/:domain'
         },
+        listTags: {
+            method: 'GET',
+            isArray: true,
+            url: '/tags'
+        },
+        saveTag: {
+            method: 'POST',
+            isArray: false,
+            url: '/tags'
+        },
+        destroyTag: {
+            method: 'DELETE',
+            isArray: false,
+            url: '/tags/:tagID'
+        },
         destroyDomain: {
             method: 'DELETE',
             isArray: false,
-            url: '/domains/:domain'
+            url: '/domains/:domain_name'
         }
     });
 });
