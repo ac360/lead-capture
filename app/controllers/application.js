@@ -4,7 +4,9 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     User = mongoose.model('User'),
     Domain = mongoose.model('Domain'),
+    Campaign = mongoose.model('Campaign'),
     Tag = mongoose.model('Tag'),
+    MandrillHelper = require('../mandrill_helper'),
     config = require('../../config/config');
 
 
@@ -336,6 +338,54 @@ var destroyTag = function(req, res, next) {
     });
 };
 
+// List Mandrill Templates
+var listMandrillTemplates = function(req, res, next) {
+    MandrillHelper.listTemplates(function(error, templates) {
+        if (error) return res.status(500).json({
+            error: error
+        });
+        res.json(templates);
+    });
+};
+
+// List Campaigns
+var listCampaigns = function(req, res, next) {
+    Campaign.find({
+        user: req.session.user._id
+    }).exec(function(error, campaigns) {
+        if (error) return res.status(500).json({
+            error: error
+        });
+        res.json(campaigns);
+    });
+};
+
+// Save Campaign
+var saveCampaign = function(req, res, next) {
+    if (!req.body._id) {
+        var campaign = new Campaign(req.body);
+        campaign.user = req.session.user._id;
+        campaign.save(function(error, campaign) {
+            if (error) return res.status(500).json({
+                error: error
+            });
+            res.json(campaign);
+        });
+    } else {
+        Campaign.findOne({
+            _id: req.body._id
+        }).exec(function(error, campaign) {
+            if (error) return res.status(500).json({
+                error: error
+            });
+            campaign = _.assign(campaign, req.body);
+            campaign.user = req.session.user._id;
+            campaign.save(function(error, campaign) {
+                res.json(campaign);
+            });
+        });
+    }
+};
 
 
 module.exports = {
@@ -351,7 +401,13 @@ module.exports = {
     destroyDomain: destroyDomain,
     listTags: listTags,
     saveTag: saveTag,
-    destroyTag: destroyTag
+    destroyTag: destroyTag,
+    listMandrillTemplates: listMandrillTemplates,
+    listCampaigns: listCampaigns,
+    saveCampaign: saveCampaign
 };
+
+
+
 
 // End

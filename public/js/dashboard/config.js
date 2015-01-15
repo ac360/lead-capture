@@ -2,12 +2,17 @@
 angular.module('appDashboard').config(['$stateProvider', '$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
 		// For any unmatched url, redirect to '/'
-		$urlRouterProvider.otherwise('/');
+		$urlRouterProvider.otherwise('/campaigns');
 		// Now set up the states
 		$stateProvider
-			.state('dashboard', {
-				url: '/',
-				templateUrl: 'views/dashboard/dashboard.html'
+			.state('capture', {
+				url: '/capture',
+				templateUrl: 'views/dashboard/capture.html'
+			});
+		$stateProvider
+			.state('campaigns', {
+				url: '/campaigns',
+				templateUrl: 'views/dashboard/campaigns.html'
 			});
 	}
 ]);

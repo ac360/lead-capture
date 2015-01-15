@@ -1,4 +1,4 @@
-<div id="dashboard-page" class="animated fadeIn" data-ng-controller="DashboardController" data-ng-init="initialize()">
+<div id="dashboard-page" class="animated fadeIn" data-ng-controller="CaptureController" data-ng-init="initialize()">
 
     <!-- Dashboard Header -->
 
@@ -6,7 +6,7 @@
 
     <!-- Dashboard Navigation -->
     <div id="dashboard-navigation">
-        <span style="font-size:16px;">Pop-Up Dashboard</span>
+        <span style="font-size:16px;">Capture & Campaign</span>
         <ul class="list-inline pull-right">
             <li>
                 <a class="pull-right" href="/logout">Sign Out</a>
@@ -20,6 +20,12 @@
     <div id="dashboard-content">
 
         <div id="popup-select">
+
+            <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;" data-ng-show="domains.length">Navigation:</p>
+            <ul id="navigation" class="list-unstyled">
+                <li class="st-link st-font" data-ui-sref="capture"><i class="fa fa-chevron-right"></i> Capture</li>
+                <li class="st-link st-font" data-ui-sref="campaigns"><i class="fa fa-chevron-right" style="opacity:0.3"></i> Campaigns</li>
+            </ul>
 
             <!-- Current Domain -->
             <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;" data-ng-show="domains.length">Current Domain:</p>
@@ -115,13 +121,12 @@
                         <!-- popup Title Input -->
                         <div class="title" style="display:block;float:left;width:230px;height:40px;margin:0px;padding-top:3px;padding-right:5px;">
                             <input type="text" data-ng-model="domains[domain_index].popups[popup_index].title" style="float:left;padding:3px;border:0px;background:none;width:100%;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Popup Title">
-
                         </div>
                         <div class="add-field" style="display:block;float:right;width:130px;height:30px;text-align:right">
                             <select class="form-control input-sm" data-ng-options="field for field in field_types" data-ng-model="field" style="float:left;text-transform: capitalize!important;width:100px;margin:0px 0px"></select>
                             <span class="st-link" style="font-size:23px;" data-ng-click="addField()">
-								<i class="fa fa-plus"></i>
-							</span>
+                                <i class="fa fa-plus"></i>
+                            </span>
                         </div>
                     </div>
 

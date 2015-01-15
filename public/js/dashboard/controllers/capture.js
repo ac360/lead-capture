@@ -1,4 +1,4 @@
-angular.module('appDashboard').controller('DashboardController', ['$rootScope', '$scope', '$timeout', '$modal', 'LeadCapture',
+angular.module('appDashboard').controller('CaptureController', ['$rootScope', '$scope', '$timeout', '$modal', 'LeadCapture',
     function($rootScope, $scope, $timeout, $modal, LeadCapture) {
 
         // Set Defaults

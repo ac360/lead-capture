@@ -35,6 +35,21 @@ angular.module('appDashboard').factory('LeadCapture', function($resource) {
             method: 'DELETE',
             isArray: false,
             url: '/domains/:domain_name'
+        },
+        listTemplates: {
+            method: 'GET',
+            isArray: true,
+            url: '/templates'
+        },
+        listCampaigns: {
+            method: 'GET',
+            isArray: true,
+            url: '/campaigns'
+        },
+        saveCampaign: {
+            method: 'POST',
+            isArray: false,
+            url: '/campaigns'
         }
     });
 });

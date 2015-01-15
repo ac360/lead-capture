@@ -1,0 +1,124 @@
+<div id="campaigns-page" class="animated fadeIn" data-ng-controller="CampaignsController" data-ng-init="initialize()">
+
+    <!-- Dashboard Header -->
+
+    <div class="clearfix"></div>
+
+    <!-- Dashboard Navigation -->
+    <div id="dashboard-navigation">
+        <span style="font-size:16px;">Capture & Campaign</span>
+        <ul class="list-inline pull-right">
+            <li>
+                <a class="pull-right" href="/logout">Sign Out</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard-content">
+
+        <div id="left-col">
+            <p class="st-font" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;">Navigation:</p>
+            <ul id="navigation" class="list-unstyled">
+                <li class="st-link st-font" data-ui-sref="capture"><i class="fa fa-chevron-right" style="opacity:0.3"></i> Capture</li>
+                <li class="st-link st-font" data-ui-sref="campaigns"><i class="fa fa-chevron-right"></i> Campaigns</li>
+            </ul>
+
+            <!-- Campaigns Area -->
+            <p class="st-font st-link" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.04)" data-ng-click="show_campaigns = !show_campaigns">
+                <span style="margin-right:6px;">Campaigns</span>
+                <i class="fa fa-chevron-down" data-ng-show="show_campaigns"></i>
+                <i class="fa fa-chevron-up" data-ng-hide="show_campaigns"></i>
+            </p>
+            <ul id="campaigns-list" class="list-unstyled" data-ng-show="show_campaigns">
+                <li class="st-link" data-ng-click="newCampaign()">
+                    <i class="fa fa-plus"></i> New Campaign
+                </li>
+                <li class="st-link" data-ng-repeat="campaign in campaigns" data-ng-click="selectCampaign(campaign)">
+                    <i class="fa fa-bolt"></i> {{ campaign.name }}
+                </li>
+            </ul>
+
+            <!-- Templates Area -->
+            <p class="st-font st-link" style="font-size:8px;padding-left:2px;margin-bottom:5px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.04)" data-ng-click="show_templates = !show_templates">
+                <span style="margin-right:6px;">Templates</span>
+                <i class="fa fa-chevron-down" data-ng-show="show_templates"></i>
+                <i class="fa fa-chevron-up" data-ng-hide="show_templates"></i>
+            </p>
+            <ul id="templates-list" class="list-unstyled" data-ng-show="show_templates">
+                <li data-ng-repeat="template in templates">
+                    <i class="fa fa-envelope st-link" data-ng-click="campaign.autoresponse_template = template.name"></i>
+                    <i class="fa fa-envelope-o st-link" data-ng-click="addToSequence(template)"></i> {{ template.name }}
+                </li>
+            </ul>
+
+        </div>
+
+        <div id="right-col">
+            <!-- Campaign Title Input -->
+            <div class="title" style="width:100%;height:40px;margin:10px 0px 0px 0px;padding-top:3px;padding-right:5px;">
+                <input type="text" data-ng-model="campaign.name" style="float:left;padding:3px 10px;border:0px;background:none;width:300px;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Campaign Title">
+                <button class="btn btn-primary btn-sm pull-right" data-ng-click="saveCampaign()">Save Campaign</button>
+            </div>
+
+            <!-- Emails Area -->
+            <div id="campaign-emails">
+                <!-- Auto-Response -->
+                <p class="st-red" style="font-size:12px;"><i class="fa fa-envelope st-link" style="margin-right:5px;"></i> Email Auto-Response</p>
+                <p data-ng-show="campaign.autoresponse_template" style="font-size:12px;font-weight:bold">{{ campaign.autoresponse_template }}</p>
+
+                <!-- Email Sequence -->
+                <p class="st-red" style="font-size:12px;"><i class="fa fa-envelope-o st-link" style="margin-right:5px;"></i> Email Sequence</p>
+
+                <div class="sequence-email" data-ng-repeat="email in campaign.sequence">
+                    <p class="sequence-template">{{ email.template }}</p>
+                    <p class="sequence-options">
+                        <span>
+                            Order 
+                            <i class="fa fa-chevron-up st-link" data-ng-click="moveEmail(email, $index, 'up')"></i>
+                            <i class="fa fa-chevron-down st-link" data-ng-click="moveEmail(email, $index, 'down')"></i>
+                        </span>
+                        <span>
+                            {{ email.number }}
+                            <i class="fa fa-chevron-up st-link" data-ng-click="adjustNumber($index, 'up')"></i>
+                            <i class="fa fa-chevron-down st-link" data-ng-click="adjustNumber($index, 'down')"></i>
+                        </span>
+                        <span style="text-transform:capitalize;">
+                            {{ email.interval }}
+                            <i class="fa fa-clock-o st-link" data-ng-click="adjustInterval($index)"></i>
+                        </span>
+                        <span class="st-link" style="text-transform:capitalize;" data-ng-click="campaign.sequence.splice($index, 1)">
+                            <i class="fa fa-trash"></i>
+                            Remove
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Campaign Rules -->
+            <div id="campaign-rules">
+
+                <!-- Rules -->
+                <p class="st-red" style="font-size:12px;"><i class="fa fa-tasks" style="margin-right:5px;"></i> Rules</p>
+                <hr style="margin:10px;width:100%;">
+                <table class="table">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="clearfix"></div>
+
+</div>
+
+
+<!-- end -->
