@@ -38,6 +38,20 @@ angular.module('appDashboard').controller('CampaignsController', ['$rootScope', 
             });
         };
 
+        $scope.deleteCampaign = function() {
+            var c = confirm("Are you sure you want to delete this campaign?");
+            if (c) {
+                LeadCapture.deleteCampaign({
+                    campaignID: $scope.campaign._id
+                }, function(response) {
+                    $scope.newCampaign();
+                    $scope.listCampaigns();
+                }, function(error) {
+                    console.log(error)
+                });
+            }
+        };
+
         $scope.listTemplates = function() {
             LeadCapture.listTemplates(function(response) {
                 $scope.templates = response;
@@ -48,9 +62,9 @@ angular.module('appDashboard').controller('CampaignsController', ['$rootScope', 
         };
 
         $scope.saveCampaign = function() {
-            if (!$scope.campaign.name) return alert("A campaign name is required.")
+            if (!$scope.campaign.name) return alert("A campaign name is required.");
             LeadCapture.saveCampaign({}, $scope.campaign, function(response) {
-                console.log(response);
+                $scope.campaign = response;
                 $scope.listCampaigns();
             }, function(error) {
                 console.log(error)

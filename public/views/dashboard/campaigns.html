@@ -58,8 +58,10 @@
 
         <div id="right-col">
             <!-- Campaign Title Input -->
-            <div class="title" style="width:100%;height:40px;margin:10px 0px 0px 0px;padding-top:3px;padding-right:5px;">
-                <input type="text" data-ng-model="campaign.name" style="float:left;padding:3px 10px;border:0px;background:none;width:300px;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Campaign Title">
+            <div class="title" style="width:100%;height:60px;margin:10px 0px 0px 0px;padding-top:3px;padding-right:5px;">
+                <input type="text" data-ng-model="campaign.name" style="float:left;padding:3px 10px;margin-top:10px;border:0px;background:none;width:300px;text-align:left;font-size:14px;color:rgba(0,0,0,0.5)" placeholder="Enter A Campaign Title">
+                <!-- Delete Campaign -->
+                <p class="st-link" style="text-align:right;font-size:10px;" data-ng-click="deleteCampaign()"><i class="fa fa-trash"></i> Delete Campaign</p>
                 <button class="btn btn-primary btn-sm pull-right" data-ng-click="saveCampaign()">Save Campaign</button>
             </div>
 
@@ -110,6 +112,7 @@
                         <td></td>
                     </tr>
                 </table>
+
             </div>
 
         </div>

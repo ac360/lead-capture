@@ -387,6 +387,23 @@ var saveCampaign = function(req, res, next) {
     }
 };
 
+// Delete Campaign
+var deleteCampaign = function(req, res, next) {
+    Campaign.findOne({
+        _id: req.params.campaignID
+    }).exec(function(error, campaign) {
+        if (error) return res.status(500).json({
+            error: error
+        });
+        campaign.remove(function(error, response) {
+            if (error) return res.status(500).json({
+                error: error
+            });
+            res.json(response);
+        });
+    });
+};
+
 
 module.exports = {
     index: index,
@@ -404,7 +421,8 @@ module.exports = {
     destroyTag: destroyTag,
     listMandrillTemplates: listMandrillTemplates,
     listCampaigns: listCampaigns,
-    saveCampaign: saveCampaign
+    saveCampaign: saveCampaign,
+    deleteCampaign: deleteCampaign
 };
 
 

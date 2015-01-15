@@ -23,6 +23,7 @@ module.exports = function(app) {
 	app.get('/templates', application.listMandrillTemplates);
 	app.get('/campaigns', application.listCampaigns);
 	app.post('/campaigns', application.saveCampaign);
+	app.delete('/campaigns/:campaignID', application.deleteCampaign);
 	app.get('/domains', application.checkSession, application.listDomains);
 	app.post('/domains', application.checkSession, application.createDomain);
 	app.delete('/domains/:domain_name', application.checkSession, application.destroyDomain);

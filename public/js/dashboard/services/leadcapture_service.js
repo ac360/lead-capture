@@ -50,6 +50,11 @@ angular.module('appDashboard').factory('LeadCapture', function($resource) {
             method: 'POST',
             isArray: false,
             url: '/campaigns'
+        },
+        deleteCampaign: {
+            method: 'DELETE',
+            isArray: false,
+            url: '/campaigns/:campaignID'
         }
     });
 });
